@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?><beans xmlns="http://www.springframework.org/schema/beans" 
+	xmlns:jaxrs="http://cxf.apache.org/jaxrs" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd        
+						http://cxf.apache.org/jaxrs    http://cxf.apache.org/schemas/jaxrs.xsd">
+
+	<import resource="classpath:META-INF/cxf/cxf.xml"/>
+	<import resource="classpath:META-INF/cxf/cxf-servlet.xml"/>
+
+	<bean id="jaxRsServer" class="ir.asta.wise.core.remoting.rs.RestServerFactory">
+		<property name="address" value="/"/>
+		<property name="providers">
+			<list>
+				<ref bean="jsonProvider"/>
+<!-- 
+ 				<bean
+					class="ir.asta.wise.core.datamanagement.exception.ApplicationExceptionHandler" />
+				<ref bean="restParamObjectDeserializer"/>
+ -->
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="jsonProvider"
+         class="com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider">
+	</bean>
+	
+
+</beans>

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:artifact="urn:maven-artifact-ant">
+
+	<taskdef resource="net/sf/antcontrib/antlib.xml" classpath="lib/ant-contrib-1.0b2.jar" />
+	<path id="maven-ant-tasks.classpath" path="lib/maven-ant-tasks-2.1.3.jar" />
+	<typedef resource="org/apache/maven/artifact/ant/antlib.xml" uri="urn:maven-artifact-ant" classpathref="maven-ant-tasks.classpath" />
+
+
+	<!-- Build and deploy properties -->
+	<property environment="env" />
+	<property name="M2_HOME" value="${env.M2_HOME}" />
+	<property name="tomcat.home" value="${env.CATALINA_HOME}" />
+
+	<property name="tomcat.deploy.dir" value="${tomcat.home}/webapps" />
+
+	<property name="build.dir" value="../build"/>
+	<property name="target.dir" value="${project.dir}/target" />
+	<property name="bin.dir" value="${target.dir}/classes" />
+	<property name="web.dir" value="${project.dir}/src/main/webapp" />
+	<property name="deploy.dir" value="${tomcat.deploy.dir}/${webapp.name}" />
+
+	<macrodef name="clean-deploy">
+		<attribute name="deployDir" default="${deploy.dir}"/>
+		<sequential>
+			<delete dir="${tomcat.home}/temp/" />
+			<delete dir="${tomcat.home}/work/" />
+
+			<mkdir dir="${tomcat.home}/temp/" />
+			<mkdir dir="${tomcat.home}/work/" />
+		</sequential>
+	</macrodef>
+
+	<macrodef name="touch-deploy">
+		<sequential>
+			<touch file="${deploy.dir}/WEB-INF/web.xml" />
+		</sequential>
+	</macrodef>
+
+	<macrodef name="tomcat-deploy">
+		<sequential>
+			<artifact:mvn pom="pom.xml" mavenHome="${M2_HOME}" fork="true">
+				<sysproperty key="maven.multiModuleProjectDirectory" path="${M2_HOME}"/>
+				<arg value="compile" />
+				<arg value="war:exploded" />
+				<arg value="-Dmaven.test.skip=true" />
+				<arg value="-e" />
+			</artifact:mvn>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="tomcat-copy-minimal">
+		<sequential>
+			<tstamp>
+			     <format property="current.time" pattern="yyyyMMddHHmmss"/>
+			</tstamp>
+			<copy todir="${deploy.dir}" verbose="true">
+				<fileset dir="${web.dir}">
+				</fileset>
+			</copy>
+			<replaceregexp byline="true">
+				<regexp pattern="&quot;buildVersion&quot;(\s)*:[^\,]*" />
+				<substitution expression="&quot;buildVersion&quot;:&quot;${current.time}&quot;" />
+				<fileset dir="${deploy.dir}">
+					<include name="build.nocache.json" />
+				</fileset>
+			</replaceregexp>
+			<copy todir="${deploy.dir}/WEB-INF/classes" verbose="true">
+				<fileset dir="${bin.dir}">
+				</fileset>
+			</copy>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="update-eclipse-classpath">
+		<attribute name="pom" default="pom.xml"/>
+		<sequential>
+			<artifact:mvn pom="@{pom}" mavenHome="${M2_HOME}" fork="true">
+				<sysproperty key="maven.multiModuleProjectDirectory" path="${M2_HOME}"/>
+				<arg value="eclipse:eclipse" />
+				<arg value="-e" />
+			</artifact:mvn>
+			<loadfile property="classpathContent" srcFile=".classpath"/>
+			<if>
+				<not>
+					<contains string="${classpathContent}" substring="exported" />
+				</not>
+				<then>
+					<echo message="change in .classpath file, add exported='true' to classpathentry" />
+					<replace file=".classpath">
+						<replacefilter>
+							<replacetoken>sourcepath=</replacetoken>
+							<replacevalue>exported="true" sourcepath=</replacevalue>
+						</replacefilter>
+					</replace>
+				</then>
+				<else>
+					<echo message=".classpath file, already has exported attributes in classpathentry" />
+				</else>
+			</if>
+		</sequential>
+	</macrodef>
+
+</project>

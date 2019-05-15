@@ -1,0 +1,54 @@
+<project name="contacts" basedir="." xmlns:artifact="urn:maven-artifact-ant" default="tomcat-deploy">
+
+	<property environment="env" />
+	<property name="webapp.name" value="contacts" />
+	<property name="project.dir" value="${basedir}" />
+	
+	<import file="ant-macros.xml" />
+	
+	<target name="clean">
+		<clean-deploy />
+		<echo message="${M2_HOME}"></echo>
+		<artifact:mvn pom="pom.xml" mavenHome="${M2_HOME}" fork="true">
+			<sysproperty key="maven.multiModuleProjectDirectory" path="${M2_HOME}"/>
+			<arg value="clean" />
+			<arg value="-e" />
+		</artifact:mvn>
+	</target>
+
+	<!-- Maven -->
+
+	<target name="update-eclipse-classpath">
+		<update-eclipse-classpath />
+	</target>
+
+	<target name="mvn-test">
+		<artifact:mvn pom="pom.xml" mavenHome="${M2_HOME}" fork="true">
+			<sysproperty key="maven.multiModuleProjectDirectory" path="${M2_HOME}"/>
+			<arg value="test" />
+		</artifact:mvn>
+	</target>
+
+	<target name="tomcat-deploy">
+		<tomcat-deploy />
+	</target>
+	
+	<target name="tomcat-copy-minimal">
+			<tomcat-copy-minimal />
+	</target>
+	
+	<target name="tomcat-reload">
+		<tomcat-deploy />
+		<touch-deploy />
+	</target>
+	
+	<target name="dependency-tree">
+		<artifact:mvn pom="pom.xml" mavenHome="${M2_HOME}" fork="true">
+			<sysproperty key="maven.multiModuleProjectDirectory" path="${M2_HOME}"/>
+			<arg value="dependency:tree" />
+		</artifact:mvn>
+	</target>
+
+</project>
+
+

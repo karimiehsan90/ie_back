@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:sec="http://www.springframework.org/schema/security"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+       http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<bean id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:config.properties</value>
+			</list>
+		</property>
+		<property name="systemPropertiesMode" value="2" />
+	</bean>
+
+	<bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean" lazy-init="true"  >
+		<property name="jndiName"><value>${hibernate.datasource.jndi}</value></property>
+		<property name="lookupOnStartup"> 
+            <value>false</value> 
+        </property> 
+		<property name="proxyInterface"> 
+			<value>javax.sql.DataSource</value> 
+		</property>
+	</bean>
+
+   <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+      <property name="dataSource" ref="dataSource" />
+	   <property name="packagesToScan" value="ir.asta.training.*.entities"/>
+      <property name="jpaVendorAdapter">
+         <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />
+      </property>
+      <property name="jpaProperties">
+         <props>
+			<prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop> 
+			<prop key="hibernate.show_sql">${hibernate.connection.show_sql}</prop>
+         </props>
+      </property>
+   </bean>
+
+ 	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactory" />
+	</bean>
+
+	<tx:annotation-driven transaction-manager="transactionManager"	proxy-target-class="true" />
+	
+	<bean class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor" >
+		<property name="proxyTargetClass" value="true" />
+	</bean>
+
+	<bean class="com.mongodb.MongoClient" id="mongoClient">
+		<constructor-arg value="localhost" name="host"/>
+		<constructor-arg value="27017" name="port"/>
+	</bean>
+		
+	<context:component-scan base-package="ir.asta.training.contacts" />
+	<context:annotation-config />
+	<context:component-scan base-package="ir.asta.training.auth" />
+	
+<!-- 
+	<bean id="jsonProvider"
+         class="com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider">
+         <constructor-arg ref="jsonMapper" />
+         <constructor-arg>
+			<value></value>
+         </constructor-arg>
+	</bean>
+	
+	<bean class="ir.asta.wise.core.web.rest.impl.MessageLoaderServiceImpl"
+		id="restMessageLoaderService">
+	</bean>
+ -->	
+	
+</beans>

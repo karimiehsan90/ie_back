@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:sec="http://www.springframework.org/schema/security"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+       http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.0.xsd
+	   http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.0.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd" >
+       
+	<import resource="classpath:ir/asta/wise/core/spring/wise-core-util.xml"/>
+	<bean id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:test-config.properties</value>
+			</list>
+		</property>
+		<property name="systemPropertiesMode" value="2" />
+	</bean>
+
+	<bean id="uploadRepository"	class="ir.asta.wise.core.datamanagement.test.MockUploadRepository" />
+	
+    <jdbc:embedded-database id="dataSource" type="H2" >
+    <!-- 
+        <jdbc:script location="classpath:config/sql/schema.sql"/>
+     -->
+    </jdbc:embedded-database>
+
+	<bean id="sessionFactory" lazy-init="false"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="mappingDirectoryLocations">
+			<list>
+				<value>classpath:config/hibernate</value>
+			</list>
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect_resolvers">ir.asta.wise.core.orm.hibernate.CustomDialectResolver</prop>
+				<prop key="hibernate.hbm2ddl.auto">create</prop> 
+                <prop key="hibernate.cache.use_second_level_cache">false</prop>
+                <prop key="hibernate.cache.use_query_cache">false</prop>
+				<prop key="hibernate.show_sql">false</prop>
+			</props>
+		</property>
+	</bean>
+	
+	<!-- Transaction manager for a single Hibernate SessionFactory (alternative to JTA) -->
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<aop:config proxy-target-class="true" />                
+  	<tx:annotation-driven transaction-manager="transactionManager" />
+	<bean class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor" >
+		<property name="proxyTargetClass" value="true" />
+	</bean>
+	
+	<bean id="hibernateTestTemplate" class="ir.asta.wise.core.orm.hibernate.test.HibernateTestTemplate"  />
+	
+</beans>

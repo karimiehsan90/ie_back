@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Internet Engineering Course</title>
+<script type="text/javascript">
+function callRest(){
+	var obj = { 
+		bookname: document.getElementById('bookname').value, 
+		author:document.getElementById('author').value
+	};
+	var sentJSON = JSON.stringify(obj);
+	const Http = new XMLHttpRequest();
+	const url='/contacts/rest/myservice/book';
+	Http.open("POST", url, false);
+	Http.setRequestHeader("Content-type", "application/json");
+	Http.send(sentJSON);
+	Http.onreadystatechange=callbackFunction(Http);
+}
+
+function callbackFunction(Http){
+	var returnedObject = JSON.parse(Http.responseText);
+	document.getElementById('bookname').value = returnedObject.bookname;
+	document.getElementById('author').value = returnedObject.author;
+	document.getElementById('text').value = returnedObject.comment;
+}
+
+function callPersianDate(){
+	const Http = new XMLHttpRequest();
+	const url='/contacts/rest/myservice/time/2019/5/2';
+	Http.open("GET", url, false);
+	//Http.setRequestHeader("Content-type", "application/json");
+	Http.send();
+	Http.onreadystatechange=showInTextArea(Http);
+}
+function showInTextArea(Http){
+	document.getElementById('text').value = Http.responseText;
+}
+
+</script>
+</head>
+<body>
+<form method="post" action="/contacts/rest/myservice/mysubmit">
+Book Name: <input id = "bookname" name="bookname" value="Rahesh"/> <BR/>
+Author: <input id="author" name= "author" value="Amirkhani"/><BR/>
+<input value="Call Web Service" type="button" onclick="callRest()"/><BR/>
+<input value="Show Persian Date" type="button" onclick="callPersianDate()"/><BR/>
+<input value="Submit Form" type="submit"/><BR/>
+Result: <textarea id="text" cols="20" rows="5" >No Results Yet</textarea><BR/>
+</form>
+</body>
+</html>
