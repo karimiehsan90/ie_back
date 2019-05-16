@@ -3,10 +3,13 @@ package ir.asta.training.auth.services.impl;
 import ir.asta.training.auth.manager.AuthManager;
 import ir.asta.training.auth.services.AuthService;
 import ir.asta.wise.core.datamanagement.ActionResult;
+import ir.asta.wise.core.response.CaseResponse;
 import ir.asta.wise.core.response.UserResponse;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.ws.rs.FormParam;
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 
@@ -16,7 +19,8 @@ public class AuthServiceImpl implements AuthService {
     private AuthManager manager;
 
     @Override
-    public ActionResult<UserResponse> login(String email, String password) throws UnsupportedEncodingException, NoSuchAlgorithmException {
+    public ActionResult<UserResponse> login(String email, String password)
+            throws UnsupportedEncodingException, NoSuchAlgorithmException {
         return manager.login(email, password);
     }
 
@@ -30,5 +34,15 @@ public class AuthServiceImpl implements AuthService {
                                                )
             throws UnsupportedEncodingException, NoSuchAlgorithmException {
         return manager.register(password, rePassword, name, email, role);
+    }
+
+    @Override
+    public ActionResult<CaseResponse> setCase(String title,
+                                              String to,
+                                              String importance,
+                                              String body,
+                                              String token)
+            throws UnsupportedEncodingException, NoSuchAlgorithmException{
+        return manager.setCase(title,to,importance,body,token);
     }
 }

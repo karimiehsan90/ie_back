@@ -25,43 +25,51 @@ public class AuthDao {
     @PersistenceContext
     private EntityManager manager;
 
-    public boolean containsUser(String email){
+    public boolean containsUser(String email) {
         MongoDatabase database = client.getDatabase("ticketing");
         MongoCollection<Document> users = database.getCollection("users");
         return users.find(Filters.eq(UserMongo.email, email)).iterator().hasNext();
     }
 
-    public UserResponse authenticate(String email, String hashedPassword){
+    public boolean containsUserAndValid(String name) {
+        //code
+        return true;
+    }
+
+    public UserResponse authenticate(String email, String hashedPassword) {
         MongoDatabase database = client.getDatabase("ticketing");
         MongoCollection<Document> users = database.getCollection("users");
-        FindIterable<Document> documents = users.find(Filters.and(Filters.eq(UserMongo.email, email), Filters.eq(UserMongo.password, hashedPassword),
-                Filters.eq(UserMongo.isAccept, true), Filters.eq(UserMongo.isActive, true)));
-        if (documents.iterator().hasNext()){
+        FindIterable<Document> documents = users.find(Filters.and(
+                Filters.eq(UserMongo.email, email),
+                Filters.eq(UserMongo.password, hashedPassword),
+                Filters.eq(UserMongo.isAccept, true),
+                Filters.eq(UserMongo.isActive, true)));
+        if (documents.iterator().hasNext()) {
             Document next = documents.iterator().next();
             return convertDocumentToUserResponse(next);
         }
         return null;
     }
 
-    public UserResponse authenticate(String token){
+    public UserResponse authenticate(String token) {
         ObjectId id = new ObjectId(token);
         MongoDatabase database = client.getDatabase("ticketing");
         MongoCollection<Document> users = database.getCollection("users");
         FindIterable<Document> documents = users.find(Filters.and(Filters.eq(UserMongo.objectId, id), Filters.eq(UserMongo.isActive, true),
                 Filters.eq(UserMongo.isAccept, true)));
-        if (documents.iterator().hasNext()){
+        if (documents.iterator().hasNext()) {
             Document next = documents.iterator().next();
             return convertDocumentToUserResponse(next);
         }
         return null;
     }
 
-    private UserResponse convertDocumentToUserResponse(Document next){
+    private UserResponse convertDocumentToUserResponse(Document next) {
         UserResponse response = new UserResponse();
         response.setRole(next.getString(UserMongo.role));
         String name = next.getString(UserMongo.firstName);
         String lastName = next.getString(UserMongo.lastName);
-        if (lastName != null){
+        if (lastName != null) {
             name += " " + lastName;
         }
         response.setName(name);
@@ -74,7 +82,7 @@ public class AuthDao {
             String name,
             String email,
             String role
-    ){
+    ) {
         MongoDatabase database = client.getDatabase("ticketing");
         MongoCollection<Document> users = database.getCollection("users");
         Document document = new Document(UserMongo.firstName, name);
