@@ -9,6 +9,7 @@ import ir.asta.wise.core.enums.Importance;
 import ir.asta.wise.core.enums.Status;
 import ir.asta.wise.core.response.CaseResponse;
 import ir.asta.wise.core.response.UserResponse;
+import ir.asta.wise.core.response.UserResponseOthers;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
@@ -141,7 +142,7 @@ public class AuthManager {
                     CaseEntity caseEntity = new CaseEntity(title, body, now, now, from, toEntity, imp, Status.OPEN, null);
                     dao.setCase(caseEntity);
                     result.setSuccess(true);
-                    result.setMessage(null);
+                    result.setMessage("با موفقیت ارسال شد");
                     result.setData(null);
                 }
                 else {
@@ -179,5 +180,18 @@ public class AuthManager {
             ans[i] = massages.get(i);
         }
         return ans;
+    }
+
+    public ActionResult<List<UserResponseOthers>> getPossibles(String token) {
+        UserResponse authenticate = dao.authenticate(token);
+        ActionResult<List<UserResponseOthers>> result = new ActionResult<>();
+        if (authenticate != null){
+            result.setSuccess(true);
+            result.setData(dao.getPossibles());
+        }
+        else {
+            result.setMessage("شما لاگین نیستید");
+        }
+        return result;
     }
 }

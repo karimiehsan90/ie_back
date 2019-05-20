@@ -9,6 +9,7 @@ import ir.asta.training.auth.entities.UserEntity;
 import ir.asta.training.auth.fixed.Role;
 import ir.asta.training.auth.fixed.UserMongo;
 import ir.asta.wise.core.response.UserResponse;
+import ir.asta.wise.core.response.UserResponseOthers;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
@@ -17,6 +18,7 @@ import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.util.ArrayList;
 import java.util.List;
 
 @Named("authDao")
@@ -128,5 +130,32 @@ public class AuthDao {
         UserEntity entity = new UserEntity(token);
         manager.persist(entity);
         return response;
+    }
+
+    public List<UserResponseOthers> getPossibles() {
+        FindIterable<Document> users = database.getCollection("users").find(
+                Filters.and(Filters.eq(UserMongo.isActive, true),
+                        Filters.eq(UserMongo.isAccept, true),
+                        Filters.or(
+                                Filters.eq(UserMongo.role, Role.teacher),
+                                Filters.eq(UserMongo.role, Role.manager)
+                        ))
+        );
+        List<UserResponseOthers> list = new ArrayList<>();
+        for (Document user:users) {
+            String mongoId = user.getObjectId(UserMongo.objectId).toHexString();
+            String name = user.getString(UserMongo.firstName);
+            String lastName = user.getString(UserMongo.lastName);
+            if (lastName != null){
+                name += " " + lastName;
+            }
+            List<UserEntity> resultList = manager.createQuery("select e from UserEntity e where e.mongoId=:mongo_id").setParameter("mongo_id", mongoId).getResultList();
+            if (resultList.size() > 0){
+                UserEntity entity = resultList.get(0);
+                UserResponseOthers response = new UserResponseOthers(entity.getId(), name);
+                list.add(response);
+            }
+        }
+        return list;
     }
 }
