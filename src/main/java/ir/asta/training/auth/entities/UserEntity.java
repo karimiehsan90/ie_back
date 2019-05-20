@@ -1,6 +1,7 @@
 package ir.asta.training.auth.entities;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -11,6 +12,12 @@ public class UserEntity {
 
     @Column(name = "mongo_id", nullable = false)
     private String mongoId;
+
+    @OneToMany(mappedBy = "from")
+    private Set<CaseEntity> sends;
+
+    @OneToMany(mappedBy = "to")
+    private Set<CaseEntity> receives;
 
     public UserEntity(String mongoId) {
         this.mongoId = mongoId;

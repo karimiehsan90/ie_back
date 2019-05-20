@@ -32,7 +32,7 @@ public interface AuthService {
     @Path("/setCase")
     @Produces(MediaType.APPLICATION_JSON)
     @POST
-    public ActionResult<CaseResponse> setCase(@FormParam("title") String title,
+    public ActionResult<String> setCase(@FormParam("title") String title,
                                               @FormParam("to") String to,
                                               @FormParam("importance") String importance,
                                               @FormParam("body") String body,

@@ -37,7 +37,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public ActionResult<CaseResponse> setCase(String title,
+    public ActionResult<String> setCase(String title,
                                               String to,
                                               String importance,
                                               String body,

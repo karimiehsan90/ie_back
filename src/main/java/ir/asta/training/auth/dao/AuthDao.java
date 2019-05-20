@@ -1,43 +1,74 @@
 package ir.asta.training.auth.dao;
 
-import com.mongodb.MongoClient;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
+import ir.asta.training.auth.entities.CaseEntity;
 import ir.asta.training.auth.entities.UserEntity;
 import ir.asta.training.auth.fixed.Role;
 import ir.asta.training.auth.fixed.UserMongo;
 import ir.asta.wise.core.response.UserResponse;
 import org.bson.Document;
 import org.bson.types.ObjectId;
-import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import java.util.List;
 
 @Named("authDao")
 public class AuthDao {
-    @Autowired
-    private MongoClient client;
+    @Inject
+    private MongoDatabase database;
 
     @PersistenceContext
     private EntityManager manager;
 
     public boolean containsUser(String email) {
-        MongoDatabase database = client.getDatabase("ticketing");
         MongoCollection<Document> users = database.getCollection("users");
         return users.find(Filters.eq(UserMongo.email, email)).iterator().hasNext();
     }
 
-    public boolean containsUserAndValid(String name) {
-        //code
-        return true;
+    public UserEntity containsUserAndValid(long id) {
+        Query query = manager.createQuery("select e from UserEntity e where e.id=:id");
+        List<UserEntity> list = query.setParameter("id", id).getResultList();
+        if (list.size() > 0){
+            UserEntity entity = list.get(0);
+            FindIterable<Document> users = database.getCollection("users").find(Filters.and(
+                    Filters.eq(UserMongo.objectId, new ObjectId(entity.getMongoId())),
+                    Filters.eq(UserMongo.isAccept, true),
+                    Filters.eq(UserMongo.isActive, true),
+                    Filters.or(
+                            Filters.eq(UserMongo.role, Role.manager),
+                            Filters.eq(UserMongo.role, Role.teacher)
+                    )
+            ));
+            if (users.iterator().hasNext()){
+                return entity;
+            }
+        }
+        return null;
+    }
+
+    public CaseEntity setCase(CaseEntity entity){
+        manager.persist(entity);
+        return entity;
+    }
+
+    public UserEntity getByToken(String token){
+        Query query = manager.createQuery("select e from UserEntity e where e.mongoId=:token")
+                .setParameter("token", token);
+        List<UserEntity> list = query.getResultList();
+        if (list.size() > 0){
+            return list.get(0);
+        }
+        return null;
     }
 
     public UserResponse authenticate(String email, String hashedPassword) {
-        MongoDatabase database = client.getDatabase("ticketing");
         MongoCollection<Document> users = database.getCollection("users");
         FindIterable<Document> documents = users.find(Filters.and(
                 Filters.eq(UserMongo.email, email),
@@ -53,7 +84,6 @@ public class AuthDao {
 
     public UserResponse authenticate(String token) {
         ObjectId id = new ObjectId(token);
-        MongoDatabase database = client.getDatabase("ticketing");
         MongoCollection<Document> users = database.getCollection("users");
         FindIterable<Document> documents = users.find(Filters.and(Filters.eq(UserMongo.objectId, id), Filters.eq(UserMongo.isActive, true),
                 Filters.eq(UserMongo.isAccept, true)));
@@ -83,7 +113,6 @@ public class AuthDao {
             String email,
             String role
     ) {
-        MongoDatabase database = client.getDatabase("ticketing");
         MongoCollection<Document> users = database.getCollection("users");
         Document document = new Document(UserMongo.firstName, name);
         document.append(UserMongo.password, hashPassword).append(UserMongo.email, email);
