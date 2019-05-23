@@ -1,5 +1,6 @@
-package ir.asta.training.auth.entities;
+package ir.asta.training.cases.entities;
 
+import ir.asta.training.auth.entities.UserEntity;
 import ir.asta.wise.core.enums.Importance;
 import ir.asta.wise.core.enums.Status;
 
@@ -14,12 +15,10 @@ public class CaseEntity {
     @Column(name = "id")
     private long id;
 
-    @Lob
-    @Column(name = "title")
+    @Column(name = "title", columnDefinition = "TEXT")
     private String title;
 
-    @Lob
-    @Column(name = "body")
+    @Column(name = "body", columnDefinition = "TEXT")
     private String body;
 
     @Column(name = "created_date")

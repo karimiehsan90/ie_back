@@ -67,7 +67,8 @@
 	<context:component-scan base-package="ir.asta.training.contacts" />
 	<context:annotation-config />
 	<context:component-scan base-package="ir.asta.training.auth" />
-	
+	<context:component-scan base-package="ir.asta.training.cases" />
+
 <!-- 
 	<bean id="jsonProvider"
          class="com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider">

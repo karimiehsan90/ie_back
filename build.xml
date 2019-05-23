@@ -1,7 +1,7 @@
 <project name="contacts" basedir="." xmlns:artifact="urn:maven-artifact-ant" default="tomcat-deploy">
 
 	<property environment="env" />
-	<property name="webapp.name" value="contacts" />
+	<property name="webapp.name" value="ticketing" />
 	<property name="project.dir" value="${basedir}" />
 	
 	<import file="ant-macros.xml" />
