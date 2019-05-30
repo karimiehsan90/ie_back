@@ -7,6 +7,7 @@ import ir.asta.training.cases.entities.CaseEntity;
 import ir.asta.wise.core.datamanagement.ActionResult;
 import ir.asta.wise.core.enums.Importance;
 import ir.asta.wise.core.enums.Status;
+import ir.asta.wise.core.response.CaseResponse;
 import ir.asta.wise.core.response.UserResponse;
 import org.apache.cxf.jaxrs.ext.multipart.Attachment;
 import org.springframework.transaction.annotation.Transactional;
@@ -96,6 +97,17 @@ public class CaseManager {
         }else {
             result.setMessage(String.join("\n", massages));
         }
+        return result;
+    }
+
+    public ActionResult<List<CaseResponse>> getMyCase(String token){
+        List<CaseResponse> cases = caseDao.getMyCases(token);
+        ActionResult result = new ActionResult();
+
+        result.setData(cases);
+        result.setSuccess(true);
+        result.setMessage(null);
+
         return result;
     }
 

@@ -10,9 +10,15 @@ import org.apache.cxf.jaxrs.ext.multipart.Attachment;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.IOException;
+import ir.asta.wise.core.response.CaseResponse;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.ws.rs.FormParam;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.Set;
 
 @Named("caseService")
 public class CaseServiceImpl implements CaseService {
@@ -24,10 +30,12 @@ public class CaseServiceImpl implements CaseService {
     private CaseDao dao;
 
     @Override
-    public ActionResult<List<CaseEntity>> cases(String token) {
-        List<CaseEntity> entities = dao.getMyCases(token);
-        return new ActionResult<>(false, null, entities);
+    public ActionResult<List<CaseResponse>> getMyCase(String token)
+            throws UnsupportedEncodingException, NoSuchAlgorithmException{
+        return manager.getMyCase(token);
     }
+
+
 
     @Override
     public ActionResult<String> setCase(String title,

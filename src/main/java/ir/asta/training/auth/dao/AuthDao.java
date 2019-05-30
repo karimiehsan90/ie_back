@@ -23,6 +23,7 @@ import java.util.List;
 
 @Named("authDao")
 public class AuthDao {
+
     @Inject
     private MongoDatabase database;
 
