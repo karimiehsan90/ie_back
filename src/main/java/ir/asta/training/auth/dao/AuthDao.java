@@ -4,7 +4,6 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
-import ir.asta.training.cases.entities.CaseEntity;
 import ir.asta.training.auth.entities.UserEntity;
 import ir.asta.training.auth.fixed.Role;
 import ir.asta.training.auth.fixed.UserMongo;

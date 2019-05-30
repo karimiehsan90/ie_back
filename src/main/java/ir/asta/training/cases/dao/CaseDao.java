@@ -1,6 +1,6 @@
 package ir.asta.training.cases.dao;
 
-import ir.asta.training.cases.entities.CaseEntity;
+import ir.asta.training.auth.entities.CaseEntity;
 import ir.asta.wise.core.response.CaseResponse;
 
 import javax.inject.Named;
@@ -19,6 +19,7 @@ public class CaseDao {
         Query query = manager.createQuery("select e from CaseEntity e where e.from.mongoId=:mongo_id");
         query.setParameter("mongo_id", token);
         List<CaseEntity> cases= query.getResultList();
+        System.out.println(cases.size());
         List<CaseResponse> caseResponses= new ArrayList<>();
         CaseResponse caseResponse = new CaseResponse();
 
@@ -42,6 +43,7 @@ public class CaseDao {
     }
 
     public CaseEntity setCase(CaseEntity entity){
+        System.out.println(entity.getClass());
         manager.persist(entity);
         return entity;
     }
