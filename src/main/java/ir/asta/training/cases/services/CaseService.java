@@ -1,7 +1,7 @@
 package ir.asta.training.cases.services;
 
-import ir.asta.training.cases.entities.CaseEntity;
 import ir.asta.wise.core.datamanagement.ActionResult;
+import ir.asta.wise.core.response.CaseResponse;
 
 import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
@@ -24,9 +24,11 @@ public interface CaseService {
                                         @FormParam("token") String token)
             throws UnsupportedEncodingException, NoSuchAlgorithmException;
 
-    @POST
+    @Path("/getMyCase")
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/my")
-    public ActionResult<List<CaseEntity>> cases(@FormParam("token") String token);
+    @POST
+    public ActionResult<List<CaseResponse>> getMyCase(@FormParam("token") String token
+    )throws UnsupportedEncodingException, NoSuchAlgorithmException;
+
 
 }

@@ -1,4 +1,4 @@
-package ir.asta.training.cases.entities;
+package ir.asta.training.auth.entities;
 
 import ir.asta.training.auth.entities.UserEntity;
 import ir.asta.wise.core.enums.Importance;
@@ -29,11 +29,11 @@ public class CaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "from_id")
-    private UserEntity from;
+    public UserEntity from;
 
     @ManyToOne
     @JoinColumn(name = "to_id")
-    private UserEntity to;
+    public UserEntity to;
 
     @Column(name = "importance")
     private Importance importance;

@@ -1,13 +1,14 @@
 package ir.asta.wise.core.response;
 
+import ir.asta.training.auth.entities.UserEntity;
 import ir.asta.wise.core.enums.Importance;
 import ir.asta.wise.core.enums.Status;
 
 public class CaseResponse {
     private String title;
     private String body;
-    private String to;
-    private String from;
+    private UserEntity to;
+    private UserEntity from;
     private String file;
     private Importance importance;
     private Status status;
@@ -32,19 +33,19 @@ public class CaseResponse {
         this.body = body;
     }
 
-    public String getTo() {
+    public UserEntity getTo() {
         return to;
     }
 
-    public void setTo(String to) {
+    public void setTo(UserEntity to) {
         this.to = to;
     }
 
-    public String getFrom() {
+    public UserEntity getFrom() {
         return from;
     }
 
-    public void setFrom(String from) {
+    public void setFrom(UserEntity from) {
         this.from = from;
     }
 

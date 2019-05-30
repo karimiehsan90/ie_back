@@ -1,12 +1,8 @@
 package ir.asta.training.auth.manager;
 
 import ir.asta.training.auth.dao.AuthDao;
-import ir.asta.training.cases.entities.CaseEntity;
-import ir.asta.training.auth.entities.UserEntity;
 import ir.asta.training.auth.fixed.Role;
 import ir.asta.wise.core.datamanagement.ActionResult;
-import ir.asta.wise.core.enums.Importance;
-import ir.asta.wise.core.enums.Status;
 import ir.asta.wise.core.response.UserResponse;
 import ir.asta.wise.core.response.UserResponseOthers;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +14,6 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Named("authManager")

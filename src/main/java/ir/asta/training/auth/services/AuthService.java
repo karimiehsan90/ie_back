@@ -1,6 +1,5 @@
 package ir.asta.training.auth.services;
 
-import ir.asta.training.cases.entities.CaseEntity;
 import ir.asta.wise.core.datamanagement.ActionResult;
 import ir.asta.wise.core.response.UserResponse;
 import ir.asta.wise.core.response.UserResponseOthers;
@@ -30,12 +29,16 @@ public interface AuthService {
                                                @FormParam("role") String role
     ) throws UnsupportedEncodingException, NoSuchAlgorithmException;
 
+
+
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/list")
     public ActionResult<List<UserResponseOthers>> getToPossibles(
             @FormParam("token") String token
     );
+
+
 
 
 }
