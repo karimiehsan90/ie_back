@@ -101,8 +101,18 @@ public class CaseManager {
     }
 
     public ActionResult<List<CaseResponse>> getMyCase(String token){
-        System.out.println("here");
         List<CaseResponse> cases = caseDao.getMyCases(token);
+        ActionResult result = new ActionResult();
+
+        result.setData(cases);
+        result.setSuccess(true);
+        result.setMessage(null);
+
+        return result;
+    }
+
+    public ActionResult<List<CaseResponse>> getCaseToMe(String token){
+        List<CaseResponse> cases = caseDao.getCaseToMe(token);
         ActionResult result = new ActionResult();
 
         result.setData(cases);
