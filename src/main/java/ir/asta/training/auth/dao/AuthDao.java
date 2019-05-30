@@ -33,7 +33,7 @@ public class AuthDao {
         MongoCollection<Document> users = database.getCollection("users");
         return users.find(Filters.eq(UserMongo.email, email)).iterator().hasNext();
     }
-
+        // manager and teacher check
     public UserEntity containsUserAndValid(long id) {
         Query query = manager.createQuery("select e from UserEntity e where e.id=:id");
         List<UserEntity> list = query.setParameter("id", id).getResultList();
@@ -78,7 +78,7 @@ public class AuthDao {
         }
         return null;
     }
-
+    // get User by token
     public UserResponse authenticate(String token) {
         ObjectId id = new ObjectId(token);
         MongoCollection<Document> users = database.getCollection("users");

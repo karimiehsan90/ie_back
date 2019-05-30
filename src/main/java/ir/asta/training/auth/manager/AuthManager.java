@@ -40,7 +40,7 @@ public class AuthManager {
         return result;
     }
 
-    private String hashPassword(String password)
+    public String hashPassword(String password)
             throws NoSuchAlgorithmException, UnsupportedEncodingException {
         MessageDigest md = MessageDigest.getInstance("SHA-256");
         byte[] bytes = md.digest(password.getBytes(StandardCharsets.UTF_8));
