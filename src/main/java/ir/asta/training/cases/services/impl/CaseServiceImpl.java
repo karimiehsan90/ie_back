@@ -27,6 +27,12 @@ public class CaseServiceImpl implements CaseService {
         return manager.getMyCase(token);
     }
 
+    @Override
+    public ActionResult<List<CaseResponse>> getCaseToMe(String token)
+            throws UnsupportedEncodingException, NoSuchAlgorithmException{
+        return manager.getCaseToMe(token);
+    }
+
 
 
     @Override

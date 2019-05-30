@@ -30,5 +30,11 @@ public interface CaseService {
     public ActionResult<List<CaseResponse>> getMyCase(@FormParam("token") String token
     )throws UnsupportedEncodingException, NoSuchAlgorithmException;
 
+    @Path("/getCaseToMe")
+    @Produces(MediaType.APPLICATION_JSON)
+    @POST
+    public ActionResult<List<CaseResponse>> getCaseToMe(@FormParam("token") String token
+    )throws UnsupportedEncodingException, NoSuchAlgorithmException;
+
 
 }
