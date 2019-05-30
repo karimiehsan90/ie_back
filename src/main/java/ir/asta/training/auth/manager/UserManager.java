@@ -38,6 +38,7 @@ public class UserManager {
             }
             else {
                 dao.updatePro(name,authManager.hashPassword(password),email,phone,token);
+                result.setMessage("تغییرات با موفقیت اعمال شد");
                 result.setSuccess(true);
             }
         }

@@ -21,6 +21,6 @@ public interface UsersService {
                                                 @FormParam("phone") String phone ,
                                                 @FormParam("password") String pass ,
                                                 @FormParam("perv_pass") String ppass ,
-                                                @FormParam("_token") String token
+                                                @FormParam("token") String token
     ) throws UnsupportedEncodingException, NoSuchAlgorithmException;
 }
