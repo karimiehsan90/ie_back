@@ -1,17 +1,18 @@
 package ir.asta.training.auth.services.impl;
 
+import ir.asta.training.auth.dao.AuthDao;
+import ir.asta.training.cases.entities.CaseEntity;
 import ir.asta.training.auth.manager.AuthManager;
 import ir.asta.training.auth.services.AuthService;
 import ir.asta.wise.core.datamanagement.ActionResult;
-import ir.asta.wise.core.response.CaseResponse;
 import ir.asta.wise.core.response.UserResponse;
+import ir.asta.wise.core.response.UserResponseOthers;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.ws.rs.FormParam;
-import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 @Named("authService")
 public class AuthServiceImpl implements AuthService {
@@ -37,12 +38,9 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public ActionResult<String> setCase(String title,
-                                              String to,
-                                              String importance,
-                                              String body,
-                                              String token)
-            throws UnsupportedEncodingException, NoSuchAlgorithmException{
-        return manager.setCase(title,to,importance,body,token);
+    public ActionResult<List<UserResponseOthers>> getToPossibles(String token) {
+        return manager.getPossibles(token);
     }
+
+
 }

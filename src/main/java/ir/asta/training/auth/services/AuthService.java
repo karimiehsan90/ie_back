@@ -1,14 +1,15 @@
 package ir.asta.training.auth.services;
 
+import ir.asta.training.cases.entities.CaseEntity;
 import ir.asta.wise.core.datamanagement.ActionResult;
-import ir.asta.wise.core.response.CaseResponse;
 import ir.asta.wise.core.response.UserResponse;
+import ir.asta.wise.core.response.UserResponseOthers;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 @Path("/auth")
 public interface AuthService {
@@ -29,13 +30,12 @@ public interface AuthService {
                                                @FormParam("role") String role
     ) throws UnsupportedEncodingException, NoSuchAlgorithmException;
 
-    @Path("/setCase")
-    @Produces(MediaType.APPLICATION_JSON)
     @POST
-    public ActionResult<String> setCase(@FormParam("title") String title,
-                                              @FormParam("to") String to,
-                                              @FormParam("importance") String importance,
-                                              @FormParam("body") String body,
-                                              @FormParam("token") String token)
-            throws UnsupportedEncodingException, NoSuchAlgorithmException;
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/list")
+    public ActionResult<List<UserResponseOthers>> getToPossibles(
+            @FormParam("token") String token
+    );
+
+
 }

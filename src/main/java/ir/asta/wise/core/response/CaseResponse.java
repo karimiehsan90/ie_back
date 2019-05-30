@@ -1,53 +1,74 @@
 package ir.asta.wise.core.response;
 
+import ir.asta.wise.core.enums.Importance;
+import ir.asta.wise.core.enums.Status;
+
 public class CaseResponse {
     private String title;
     private String body;
-    private UserResponse to;
-    private UserResponse from;
-    private String importance;
+    private String to;
+    private String from;
+    private String file;
+    private Importance importance;
+    private Status status;
 
 
     public CaseResponse() {
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setBody(String body) {
-        this.body = body;
-    }
-
-    public void setTo(UserResponse to) {
-        this.to = to;
-    }
-
-    public void setFrom(UserResponse from) {
-        this.from = from;
-    }
-
-    public void setImportance(String importance) {
-        this.importance = importance;
     }
 
     public String getTitle() {
         return title;
     }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public String getBody() {
         return body;
     }
 
-    public UserResponse getTo() {
+    public void setBody(String body) {
+        this.body = body;
+    }
+
+    public String getTo() {
         return to;
     }
 
-    public UserResponse getFrom() {
+    public void setTo(String to) {
+        this.to = to;
+    }
+
+    public String getFrom() {
         return from;
     }
 
-    public String getImportance() {
+    public void setFrom(String from) {
+        this.from = from;
+    }
+
+    public String getFile() {
+        return file;
+    }
+
+    public void setFile(String file) {
+        this.file = file;
+    }
+
+    public Importance getImportance() {
         return importance;
+    }
+
+    public void setImportance(Importance importance) {
+        this.importance = importance;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 }

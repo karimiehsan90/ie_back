@@ -1,5 +1,7 @@
 package ir.asta.training.auth.entities;
 
+import ir.asta.training.cases.entities.CaseEntity;
+
 import javax.persistence.*;
 import java.util.Set;
 
