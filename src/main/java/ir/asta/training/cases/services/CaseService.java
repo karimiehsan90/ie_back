@@ -23,7 +23,7 @@ public interface CaseService {
                                         @Multipart("important") String importance,
                                         @Multipart("body") String body,
                                         @Multipart("token") String token,
-                                        @Multipart("file")Attachment attachment)
+                                        @Multipart(value = "file", required = false)Attachment attachment)
             throws IOException, NoSuchAlgorithmException;
 
     @Path("/getMyCase")

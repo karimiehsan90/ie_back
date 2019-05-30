@@ -68,7 +68,7 @@ public class CaseManager {
                     Date now = new Date();
                     String file = null;
                     if (attachment != null){
-                        String filename = attachment.getContentDisposition().getParameter("filename");
+                        String filename = "webapps/ticketing/" + attachment.getContentDisposition().getParameter("filename");
                         Path path;
                         do {
                             int index = filename.lastIndexOf(".");
@@ -77,7 +77,7 @@ public class CaseManager {
                             filename = fName + "1." + extension;
                             path = Paths.get(filename);
                         } while (Files.exists(path));
-                        file = filename;
+                        file = filename.substring("webapps".length());
                         InputStream in = attachment.getObject(InputStream.class);
                         Files.copy(in, path);
                     }
