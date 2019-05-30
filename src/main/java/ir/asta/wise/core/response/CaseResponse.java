@@ -1,7 +1,6 @@
 package ir.asta.wise.core.response;
 
 import ir.asta.training.auth.entities.UserEntity;
-import ir.asta.training.cases.entities.CaseEntity;
 import ir.asta.wise.core.enums.Importance;
 import ir.asta.wise.core.enums.Status;
 

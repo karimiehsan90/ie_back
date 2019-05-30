@@ -1,4 +1,4 @@
-package ir.asta.training.cases.entities;
+package ir.asta.training.auth.entities;
 
 import ir.asta.training.auth.entities.UserEntity;
 import ir.asta.wise.core.enums.Importance;

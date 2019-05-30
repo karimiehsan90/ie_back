@@ -1,15 +1,11 @@
 package ir.asta.training.auth.services;
 
-import ir.asta.training.cases.entities.CaseEntity;
 import ir.asta.wise.core.datamanagement.ActionResult;
-import ir.asta.wise.core.response.CaseResponse;
 import ir.asta.wise.core.response.UserResponse;
 import ir.asta.wise.core.response.UserResponseOthers;
-import org.apache.cxf.jaxrs.ext.PATCH;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import java.awt.*;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;

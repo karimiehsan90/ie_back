@@ -1,7 +1,5 @@
 package ir.asta.training.auth.services.impl;
 
-import ir.asta.training.auth.dao.AuthDao;
-import ir.asta.training.cases.entities.CaseEntity;
 import ir.asta.training.auth.manager.AuthManager;
 import ir.asta.training.auth.services.AuthService;
 import ir.asta.wise.core.datamanagement.ActionResult;

@@ -1,6 +1,5 @@
 package ir.asta.training.cases.services;
 
-import ir.asta.training.cases.entities.CaseEntity;
 import ir.asta.wise.core.datamanagement.ActionResult;
 import org.apache.cxf.jaxrs.ext.multipart.Attachment;
 import org.apache.cxf.jaxrs.ext.multipart.Multipart;
@@ -12,7 +11,6 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
-import java.util.Set;
 
 @Path("/case")
 public interface CaseService {
