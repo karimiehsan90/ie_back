@@ -35,4 +35,18 @@ public class UserDao {
         FindIterable<Document> documents = users.find(Filters.eq(UserMongo.objectId, id));
         return documents.iterator().next().getString(UserMongo.password);
     }
+
+    public FindIterable<Document> getAccepteds(){
+        MongoCollection<Document> users = database.getCollection("users");
+        return users.find(Filters.eq(
+                UserMongo.isAccept, true
+        ));
+    }
+
+    public FindIterable<Document> getNotAccepteds(){
+        MongoCollection<Document> users = database.getCollection("users");
+        return users.find(Filters.eq(
+                UserMongo.isAccept, false
+        ));
+    }
 }
