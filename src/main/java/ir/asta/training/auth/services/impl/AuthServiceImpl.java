@@ -8,6 +8,7 @@ import ir.asta.wise.core.response.UserResponseOthers;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.ws.rs.FormParam;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -33,6 +34,13 @@ public class AuthServiceImpl implements AuthService {
                                                )
             throws UnsupportedEncodingException, NoSuchAlgorithmException {
         return manager.register(password, rePassword, name, email, role);
+    }
+
+    @Override
+    public ActionResult<Integer> setAccept(String id ,
+                                          String token)
+    throws UnsupportedEncodingException, NoSuchAlgorithmException{
+        return manager.setAccept(id,token);
     }
 
     @Override

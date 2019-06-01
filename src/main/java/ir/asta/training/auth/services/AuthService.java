@@ -29,6 +29,13 @@ public interface AuthService {
                                                @FormParam("role") String role
     ) throws UnsupportedEncodingException, NoSuchAlgorithmException;
 
+    @Path("/setAccept")
+    @Produces(MediaType.APPLICATION_JSON)
+    @POST
+    public ActionResult<Integer> setAccept(@FormParam("id") String id ,
+                                          @FormParam("token") String token
+            )throws UnsupportedEncodingException, NoSuchAlgorithmException;
+
 
 
     @POST
@@ -37,6 +44,7 @@ public interface AuthService {
     public ActionResult<List<UserResponseOthers>> getToPossibles(
             @FormParam("token") String token
     );
+
 
 
 

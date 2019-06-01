@@ -34,6 +34,8 @@ public class CaseDao {
                 caseResponse.setFile(caseEntity.getFile());
                 caseResponse.setTo(caseEntity.to);
                 caseResponse.setFrom(caseEntity.from);
+                caseResponse.setLastUpdate(caseEntity.getLastUpdate());
+                caseResponse.setCreatedDate(caseEntity.getCreatedDate());
 
                 caseResponses.add(caseResponse);
             }
@@ -61,6 +63,8 @@ public class CaseDao {
                 caseResponse.setFile(caseEntity.getFile());
                 caseResponse.setTo(caseEntity.to);
                 caseResponse.setFrom(caseEntity.from);
+                caseResponse.setLastUpdate(caseEntity.getLastUpdate());
+                caseResponse.setCreatedDate(caseEntity.getCreatedDate());
 
                 caseResponses.add(caseResponse);
             }

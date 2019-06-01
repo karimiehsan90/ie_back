@@ -4,9 +4,12 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Updates;
+import com.mongodb.client.result.UpdateResult;
 import ir.asta.training.auth.entities.UserEntity;
 import ir.asta.training.auth.fixed.Role;
 import ir.asta.training.auth.fixed.UserMongo;
+import ir.asta.wise.core.datamanagement.ActionResult;
 import ir.asta.wise.core.response.UserResponse;
 import ir.asta.wise.core.response.UserResponseOthers;
 import org.bson.Document;
@@ -125,6 +128,14 @@ public class AuthDao {
         UserEntity entity = new UserEntity(token);
         manager.persist(entity);
         return response;
+    }
+
+    public int setAccept(String id){
+        UpdateResult users = database.getCollection("users").updateOne(
+                Filters.eq(UserMongo.objectId, new ObjectId(id)),
+                Updates.set(UserMongo.isAccept, true)
+        );
+        return (int)users.getModifiedCount();
     }
 
     public List<UserResponseOthers> getPossibles() {

@@ -4,6 +4,9 @@ import ir.asta.training.auth.entities.UserEntity;
 import ir.asta.wise.core.enums.Importance;
 import ir.asta.wise.core.enums.Status;
 
+import java.util.Calendar;
+import java.util.Date;
+
 public class CaseResponse {
     private String title;
     private String body;
@@ -12,6 +15,9 @@ public class CaseResponse {
     private String file;
     private Importance importance;
     private Status status;
+    private String createdDate;
+    private String lastUpdate;
+
 
 
     public CaseResponse() {
@@ -71,5 +77,37 @@ public class CaseResponse {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public String getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        JalaliCalendar calendar =new JalaliCalendar();
+        calendar.setTime(createdDate);
+        String date = "";
+        date+=calendar.get(calendar.YEAR);
+        date+=" / ";
+        date+=calendar.get(calendar.MONTH);
+        date+=" / ";
+        date+=calendar.get(calendar.DATE);
+        this.createdDate = date;
+    }
+
+    public String getLastUpdate() {
+        return lastUpdate;
+    }
+
+    public void setLastUpdate(Date lastUpdate) {
+        JalaliCalendar calendar =new JalaliCalendar();
+        calendar.setTime(lastUpdate);
+        String date = "";
+        date+=calendar.get(Calendar.YEAR);
+        date+=" / ";
+        date+=calendar.get(Calendar.MONTH);
+        date+=" / ";
+        date+=calendar.get(Calendar.DATE);
+        this.lastUpdate = date;
     }
 }

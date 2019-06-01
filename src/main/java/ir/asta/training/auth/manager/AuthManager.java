@@ -1,6 +1,7 @@
 package ir.asta.training.auth.manager;
 
 import ir.asta.training.auth.dao.AuthDao;
+import ir.asta.training.auth.entities.UserEntity;
 import ir.asta.training.auth.fixed.Role;
 import ir.asta.wise.core.datamanagement.ActionResult;
 import ir.asta.wise.core.response.UserResponse;
@@ -67,6 +68,31 @@ public class AuthManager {
         return result;
     }
 
+    public ActionResult<Integer> setAccept(String id, String token) {
+        ActionResult<Integer> result = new ActionResult<>();
+        String massage = "";
+        Integer modified = 0;
+        UserResponse userResponse = dao.authenticate(token);
+        if (userResponse != null) {
+            String role = userResponse.getRole();
+            if (role.equals(Role.manager)) {
+                modified = dao.setAccept(id);
+                if (modified == 1) {
+                    massage += "it's done";
+                    result.setSuccess(true);
+                } else {
+                    massage += "fail";
+                }
+            } else {
+                massage += "it dosen't exist permission";
+            }
+        }
+        result.setMessage(massage);
+        result.setData(modified);
+
+        return result;
+    }
+
     private String[] validateRegister(
             String password,
             String rePassword,
@@ -104,11 +130,10 @@ public class AuthManager {
     public ActionResult<List<UserResponseOthers>> getPossibles(String token) {
         UserResponse authenticate = dao.authenticate(token);
         ActionResult<List<UserResponseOthers>> result = new ActionResult<>();
-        if (authenticate != null){
+        if (authenticate != null) {
             result.setSuccess(true);
             result.setData(dao.getPossibles());
-        }
-        else {
+        } else {
             result.setMessage("شما لاگین نیستید");
         }
         return result;
