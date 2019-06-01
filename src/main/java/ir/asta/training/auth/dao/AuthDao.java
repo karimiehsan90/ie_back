@@ -36,11 +36,12 @@ public class AuthDao {
         MongoCollection<Document> users = database.getCollection("users");
         return users.find(Filters.eq(UserMongo.email, email)).iterator().hasNext();
     }
-        // manager and teacher check
+
+    // manager and teacher check
     public UserEntity containsUserAndValid(long id) {
         Query query = manager.createQuery("select e from UserEntity e where e.id=:id");
         List<UserEntity> list = query.setParameter("id", id).getResultList();
-        if (list.size() > 0){
+        if (list.size() > 0) {
             UserEntity entity = list.get(0);
             FindIterable<Document> users = database.getCollection("users").find(Filters.and(
                     Filters.eq(UserMongo.objectId, new ObjectId(entity.getMongoId())),
@@ -51,18 +52,18 @@ public class AuthDao {
                             Filters.eq(UserMongo.role, Role.teacher)
                     )
             ));
-            if (users.iterator().hasNext()){
+            if (users.iterator().hasNext()) {
                 return entity;
             }
         }
         return null;
     }
 
-    public UserEntity getByToken(String token){
+    public UserEntity getByToken(String token) {
         Query query = manager.createQuery("select e from UserEntity e where e.mongoId=:token")
                 .setParameter("token", token);
         List<UserEntity> list = query.getResultList();
-        if (list.size() > 0){
+        if (list.size() > 0) {
             return list.get(0);
         }
         return null;
@@ -81,6 +82,7 @@ public class AuthDao {
         }
         return null;
     }
+
     // get User by token
     public UserResponse authenticate(String token) {
         ObjectId id = new ObjectId(token);
@@ -130,12 +132,28 @@ public class AuthDao {
         return response;
     }
 
-    public int setAccept(String id){
+    public int setAccept(String id) {
         UpdateResult users = database.getCollection("users").updateOne(
                 Filters.eq(UserMongo.objectId, new ObjectId(id)),
                 Updates.set(UserMongo.isAccept, true)
         );
-        return (int)users.getModifiedCount();
+        return (int) users.getModifiedCount();
+    }
+
+    public int setActive(String id) {
+        UpdateResult users = database.getCollection("users").updateOne(
+                Filters.eq(UserMongo.objectId, new ObjectId(id)),
+                Updates.set(UserMongo.isActive, true)
+        );
+        return (int) users.getModifiedCount();
+    }
+
+    public int setDeactive(String id) {
+        UpdateResult users = database.getCollection("users").updateOne(
+                Filters.eq(UserMongo.objectId, new ObjectId(id)),
+                Updates.set(UserMongo.isActive, false)
+        );
+        return (int) users.getModifiedCount();
     }
 
     public List<UserResponseOthers> getPossibles() {
@@ -148,15 +166,15 @@ public class AuthDao {
                         ))
         );
         List<UserResponseOthers> list = new ArrayList<>();
-        for (Document user:users) {
+        for (Document user : users) {
             String mongoId = user.getObjectId(UserMongo.objectId).toHexString();
             String name = user.getString(UserMongo.firstName);
             String lastName = user.getString(UserMongo.lastName);
-            if (lastName != null){
+            if (lastName != null) {
                 name += " " + lastName;
             }
             List<UserEntity> resultList = manager.createQuery("select e from UserEntity e where e.mongoId=:mongo_id").setParameter("mongo_id", mongoId).getResultList();
-            if (resultList.size() > 0){
+            if (resultList.size() > 0) {
                 UserEntity entity = resultList.get(0);
                 UserResponseOthers response = new UserResponseOthers(entity.getId(), name);
                 list.add(response);

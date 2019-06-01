@@ -44,6 +44,20 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    public ActionResult<Integer> setActive(String id ,
+                                           String token)
+            throws UnsupportedEncodingException, NoSuchAlgorithmException{
+        return manager.setActive(id,token);
+    }
+
+    @Override
+    public ActionResult<Integer> setdeactive(String id ,
+                                           String token)
+            throws UnsupportedEncodingException, NoSuchAlgorithmException{
+        return manager.setdeactive(id,token);
+    }
+
+    @Override
     public ActionResult<List<UserResponseOthers>> getToPossibles(String token) {
         return manager.getPossibles(token);
     }

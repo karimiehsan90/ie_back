@@ -36,6 +36,18 @@ public interface AuthService {
                                           @FormParam("token") String token
             )throws UnsupportedEncodingException, NoSuchAlgorithmException;
 
+    @Path("/setActive")
+    @Produces(MediaType.APPLICATION_JSON)
+    @POST
+    public ActionResult<Integer> setActive(@FormParam("id") String id ,
+                                           @FormParam("token") String token
+    )throws UnsupportedEncodingException, NoSuchAlgorithmException;
+
+    @Path("/setdeactive")
+    public ActionResult<Integer> setdeactive(@FormParam("id") String id ,
+                                             @FormParam("token") String token)
+            throws UnsupportedEncodingException, NoSuchAlgorithmException;
+
 
 
     @POST

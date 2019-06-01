@@ -93,6 +93,56 @@ public class AuthManager {
         return result;
     }
 
+    public ActionResult<Integer> setActive(String id, String token) {
+        ActionResult<Integer> result = new ActionResult<>();
+        String massage = "";
+        Integer modified = 0;
+        UserResponse userResponse = dao.authenticate(token);
+        if (userResponse != null) {
+            String role = userResponse.getRole();
+            if (role.equals(Role.manager)) {
+                modified = dao.setActive(id);
+                if (modified == 1) {
+                    massage += "it's done";
+                    result.setSuccess(true);
+                } else {
+                    massage += "fail";
+                }
+            } else {
+                massage += "it dosen't exist permission";
+            }
+        }
+        result.setMessage(massage);
+        result.setData(modified);
+
+        return result;
+    }
+
+    public ActionResult<Integer> setdeactive(String id, String token) {
+        ActionResult<Integer> result = new ActionResult<>();
+        String massage = "";
+        Integer modified = 0;
+        UserResponse userResponse = dao.authenticate(token);
+        if (userResponse != null) {
+            String role = userResponse.getRole();
+            if (role.equals(Role.manager)) {
+                modified = dao.setDeactive(id);
+                if (modified == 1) {
+                    massage += "it's done";
+                    result.setSuccess(true);
+                } else {
+                    massage += "fail";
+                }
+            } else {
+                massage += "it dosen't exist permission";
+            }
+        }
+        result.setMessage(massage);
+        result.setData(modified);
+
+        return result;
+    }
+
     private String[] validateRegister(
             String password,
             String rePassword,
