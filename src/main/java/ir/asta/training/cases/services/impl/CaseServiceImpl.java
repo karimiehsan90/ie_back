@@ -4,6 +4,11 @@ import ir.asta.training.cases.dao.CaseDao;
 import ir.asta.training.cases.manager.CaseManager;
 import ir.asta.training.cases.services.CaseService;
 import ir.asta.wise.core.datamanagement.ActionResult;
+import org.apache.cxf.jaxrs.ext.multipart.Attachment;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+import java.io.IOException;
 import ir.asta.wise.core.response.CaseResponse;
 
 import javax.inject.Inject;
@@ -40,8 +45,9 @@ public class CaseServiceImpl implements CaseService {
                                         String to,
                                         String importance,
                                         String body,
-                                        String token)
-            throws UnsupportedEncodingException, NoSuchAlgorithmException {
-        return manager.setCase(title,to,importance,body,token);
+                                        String token,
+                                        Attachment attachment)
+            throws IOException, NoSuchAlgorithmException {
+        return manager.setCase(title,to,importance,body,token, attachment);
     }
 }

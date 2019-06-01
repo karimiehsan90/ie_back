@@ -9,10 +9,16 @@ import ir.asta.wise.core.enums.Importance;
 import ir.asta.wise.core.enums.Status;
 import ir.asta.wise.core.response.CaseResponse;
 import ir.asta.wise.core.response.UserResponse;
+import org.apache.cxf.jaxrs.ext.multipart.Attachment;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -33,7 +39,8 @@ public class CaseManager {
             String to,
             String importance,
             String body,
-            String token){
+            String token,
+            Attachment attachment) throws IOException {
 
         ActionResult<String> result = new ActionResult<>();
         String[] massages = validateSetCase(title,
@@ -59,7 +66,22 @@ public class CaseManager {
                 if (authenticate != null) {
                     UserEntity from = authDao.getByToken(token);
                     Date now = new Date();
-                    CaseEntity caseEntity = new CaseEntity(title, body, now, now, from, toEntity, imp, Status.OPEN, null);
+                    String file = null;
+                    if (attachment != null){
+                        String filename = "webapps/ticketing/" + attachment.getContentDisposition().getParameter("filename");
+                        Path path;
+                        do {
+                            int index = filename.lastIndexOf(".");
+                            String fName = filename.substring(0, index);
+                            String extension = filename.substring(index + 1);
+                            filename = fName + "1." + extension;
+                            path = Paths.get(filename);
+                        } while (Files.exists(path));
+                        file = filename.substring("webapps".length());
+                        InputStream in = attachment.getObject(InputStream.class);
+                        Files.copy(in, path);
+                    }
+                    CaseEntity caseEntity = new CaseEntity(title, body, now, now, from, toEntity, imp, Status.OPEN, file);
                     caseDao.setCase(caseEntity);
                     result.setSuccess(true);
                     result.setMessage("با موفقیت ارسال شد");
