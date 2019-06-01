@@ -69,7 +69,8 @@ public class UserManager {
                         ? "استاد" : role.equals(Role.student)
                         ? "دانشجو" : null;
                 String id = d.getObjectId(UserMongo.objectId).toHexString();
-                responseManagers.add(new UserResponseManager(name, email, role, id));
+                boolean isActive = d.getBoolean(UserMongo.isActive);
+                responseManagers.add(new UserResponseManager(name, email, role, id, isActive));
             }
             response.setManages(responseManagers);
             List<UserAcceptResponse> acceptResponses = new ArrayList<>();

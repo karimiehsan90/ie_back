@@ -1,16 +1,21 @@
 package ir.asta.wise.core.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class UserResponseManager {
     private String name;
     private String email;
     private String role;
     private String id;
+    @JsonProperty("is_active")
+    private boolean isActive;
 
-    public UserResponseManager(String name, String email, String role, String id) {
+    public UserResponseManager(String name, String email, String role, String id, boolean isActive) {
         this.name = name;
         this.email = email;
         this.role = role;
         this.id = id;
+        this.isActive = isActive;
     }
 
     public UserResponseManager(){}
@@ -45,5 +50,13 @@ public class UserResponseManager {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
     }
 }
