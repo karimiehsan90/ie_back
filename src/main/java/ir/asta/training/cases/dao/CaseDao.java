@@ -15,62 +15,16 @@ public class CaseDao {
     @PersistenceContext
     private EntityManager manager;
 
-    public List<CaseResponse> getMyCases(String token){
+    public List<CaseEntity> getMyCases(String token){
         Query query = manager.createQuery("select e from CaseEntity e where e.from.mongoId=:mongo_id");
         query.setParameter("mongo_id", token);
-        List<CaseEntity> cases= query.getResultList();
-        System.out.println(cases.size());
-        List<CaseResponse> caseResponses= new ArrayList<>();
-        CaseResponse caseResponse = new CaseResponse();
-
-        if(cases != null) {
-            for (CaseEntity caseEntity : cases) {
-                System.out.println(caseEntity.getClass());
-                System.out.println(CaseEntity.class);
-                caseResponse.setTitle(caseEntity.getTitle());
-                caseResponse.setBody(caseEntity.getBody());
-                caseResponse.setImportance(caseEntity.getImportance());
-                caseResponse.setStatus(caseEntity.getStatus());
-                caseResponse.setFile(caseEntity.getFile());
-                caseResponse.setTo(caseEntity.to);
-                caseResponse.setFrom(caseEntity.from);
-                caseResponse.setLastUpdate(caseEntity.getLastUpdate());
-                caseResponse.setCreatedDate(caseEntity.getCreatedDate());
-
-                caseResponses.add(caseResponse);
-            }
-        }
-
-        return caseResponses;
+        return query.getResultList();
     }
 
-    public List<CaseResponse> getCaseToMe(String token){
+    public List<CaseEntity> getCaseToMe(String token){
         Query query = manager.createQuery("select e from CaseEntity e where e.to.mongoId=:mongo_id");
         query.setParameter("mongo_id", token);
-        List<CaseEntity> cases= query.getResultList();
-        System.out.println(cases.size());
-        List<CaseResponse> caseResponses= new ArrayList<>();
-        CaseResponse caseResponse = new CaseResponse();
-
-        if(cases != null) {
-            for (CaseEntity caseEntity : cases) {
-                System.out.println(caseEntity.getClass());
-                System.out.println(CaseEntity.class);
-                caseResponse.setTitle(caseEntity.getTitle());
-                caseResponse.setBody(caseEntity.getBody());
-                caseResponse.setImportance(caseEntity.getImportance());
-                caseResponse.setStatus(caseEntity.getStatus());
-                caseResponse.setFile(caseEntity.getFile());
-                caseResponse.setTo(caseEntity.to);
-                caseResponse.setFrom(caseEntity.from);
-                caseResponse.setLastUpdate(caseEntity.getLastUpdate());
-                caseResponse.setCreatedDate(caseEntity.getCreatedDate());
-
-                caseResponses.add(caseResponse);
-            }
-        }
-
-        return caseResponses;
+        return query.getResultList();
     }
 
     public CaseEntity setCase(CaseEntity entity){

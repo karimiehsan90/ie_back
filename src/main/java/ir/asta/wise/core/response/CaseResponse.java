@@ -1,5 +1,6 @@
 package ir.asta.wise.core.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import ir.asta.training.auth.entities.UserEntity;
 import ir.asta.wise.core.enums.Importance;
 import ir.asta.wise.core.enums.Status;
@@ -10,12 +11,14 @@ import java.util.Date;
 public class CaseResponse {
     private String title;
     private String body;
-    private UserEntity to;
-    private UserEntity from;
+    private String to;
+    private String from;
     private String file;
     private Importance importance;
     private Status status;
+    @JsonProperty("created_date")
     private String createdDate;
+    @JsonProperty("last_answer")
     private String lastUpdate;
 
 
@@ -39,19 +42,19 @@ public class CaseResponse {
         this.body = body;
     }
 
-    public UserEntity getTo() {
+    public String getTo() {
         return to;
     }
 
-    public void setTo(UserEntity to) {
+    public void setTo(String to) {
         this.to = to;
     }
 
-    public UserEntity getFrom() {
+    public String getFrom() {
         return from;
     }
 
-    public void setFrom(UserEntity from) {
+    public void setFrom(String from) {
         this.from = from;
     }
 
@@ -88,9 +91,9 @@ public class CaseResponse {
         calendar.setTime(createdDate);
         String date = "";
         date+=calendar.get(calendar.YEAR);
-        date+=" / ";
+        date+="/";
         date+=calendar.get(calendar.MONTH);
-        date+=" / ";
+        date+="/";
         date+=calendar.get(calendar.DATE);
         this.createdDate = date;
     }
@@ -104,9 +107,9 @@ public class CaseResponse {
         calendar.setTime(lastUpdate);
         String date = "";
         date+=calendar.get(Calendar.YEAR);
-        date+=" / ";
+        date+="/";
         date+=calendar.get(Calendar.MONTH);
-        date+=" / ";
+        date+="/";
         date+=calendar.get(Calendar.DATE);
         this.lastUpdate = date;
     }

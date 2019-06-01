@@ -2,6 +2,7 @@ package ir.asta.training.cases.manager;
 
 import ir.asta.training.auth.entities.UserEntity;
 import ir.asta.training.auth.dao.AuthDao;
+import ir.asta.training.auth.fixed.Role;
 import ir.asta.training.cases.dao.CaseDao;
 import ir.asta.training.auth.entities.CaseEntity;
 import ir.asta.wise.core.datamanagement.ActionResult;
@@ -101,24 +102,50 @@ public class CaseManager {
     }
 
     public ActionResult<List<CaseResponse>> getMyCase(String token){
-        List<CaseResponse> cases = caseDao.getMyCases(token);
-        ActionResult result = new ActionResult();
-
-        result.setData(cases);
-        result.setSuccess(true);
-        result.setMessage(null);
-
+        UserResponse authenticate = authDao.authenticate(token);
+        ActionResult<List<CaseResponse>> result = new ActionResult<>();
+        if (authenticate != null) {
+            List<CaseEntity> cases = caseDao.getMyCases(token);
+            result.setData(convertCaseEntitiesToResponse(cases));
+            result.setSuccess(true);
+            result.setMessage(null);
+        }
+        else {
+            result.setMessage("شما لاگین نیستید");
+        }
         return result;
     }
 
+    private List<CaseResponse> convertCaseEntitiesToResponse(List<CaseEntity> list){
+        List<CaseResponse> responses = new ArrayList<>();
+        for (CaseEntity entity:list) {
+            CaseResponse response = new CaseResponse();
+            response.setBody(entity.getBody());
+            response.setCreatedDate(entity.getCreatedDate());
+            response.setFile(entity.getFile());
+            response.setFrom(authDao.authenticate(entity.from.getMongoId()).getName());
+            response.setImportance(entity.getImportance());
+            response.setLastUpdate(entity.getLastUpdate());
+            response.setStatus(entity.getStatus());
+            response.setTitle(entity.getTitle());
+            response.setTo(authDao.authenticate(entity.to.getMongoId()).getName());
+            responses.add(response);
+        }
+        return responses;
+    }
+
     public ActionResult<List<CaseResponse>> getCaseToMe(String token){
-        List<CaseResponse> cases = caseDao.getCaseToMe(token);
-        ActionResult result = new ActionResult();
-
-        result.setData(cases);
-        result.setSuccess(true);
-        result.setMessage(null);
-
+        UserResponse authenticate = authDao.authenticate(token);
+        ActionResult<List<CaseResponse>> result = new ActionResult<>();
+        if (authenticate != null && !authenticate.getRole().equals(Role.student)) {
+            List<CaseEntity> cases = caseDao.getCaseToMe(token);
+            result.setData(convertCaseEntitiesToResponse(cases));
+            result.setSuccess(true);
+            result.setMessage(null);
+        }
+        else {
+            result.setMessage("شما اجازه دسترسی به این مورد را ندارید");
+        }
         return result;
     }
 
