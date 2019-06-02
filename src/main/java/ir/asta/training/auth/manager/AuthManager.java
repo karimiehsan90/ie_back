@@ -134,7 +134,7 @@ public class AuthManager {
                     massage += "fail";
                 }
             } else {
-                massage += "it dosen't exist permission";
+                massage += "it doesn't exist permission";
             }
         }
         result.setMessage(massage);
