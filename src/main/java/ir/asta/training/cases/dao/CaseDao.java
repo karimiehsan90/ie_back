@@ -7,6 +7,11 @@ import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,67 +20,45 @@ public class CaseDao {
     @PersistenceContext
     private EntityManager manager;
 
-    public List<CaseResponse> getMyCases(String token){
+    public List<CaseEntity> getMyCases(String token){
         Query query = manager.createQuery("select e from CaseEntity e where e.from.mongoId=:mongo_id");
         query.setParameter("mongo_id", token);
-        List<CaseEntity> cases= query.getResultList();
-        System.out.println(cases.size());
-        List<CaseResponse> caseResponses= new ArrayList<>();
-        CaseResponse caseResponse = new CaseResponse();
-
-        if(cases != null) {
-            for (CaseEntity caseEntity : cases) {
-                System.out.println(caseEntity.getClass());
-                System.out.println(CaseEntity.class);
-                caseResponse.setTitle(caseEntity.getTitle());
-                caseResponse.setBody(caseEntity.getBody());
-                caseResponse.setImportance(caseEntity.getImportance());
-                caseResponse.setStatus(caseEntity.getStatus());
-                caseResponse.setFile(caseEntity.getFile());
-                caseResponse.setTo(caseEntity.to);
-                caseResponse.setFrom(caseEntity.from);
-                caseResponse.setLastUpdate(caseEntity.getLastUpdate());
-                caseResponse.setCreatedDate(caseEntity.getCreatedDate());
-
-                caseResponses.add(caseResponse);
-            }
-        }
-
-        return caseResponses;
+        return query.getResultList();
     }
 
-    public List<CaseResponse> getCaseToMe(String token){
+    public List<CaseEntity> getCaseToMe(String token){
         Query query = manager.createQuery("select e from CaseEntity e where e.to.mongoId=:mongo_id");
         query.setParameter("mongo_id", token);
-        List<CaseEntity> cases= query.getResultList();
-        System.out.println(cases.size());
-        List<CaseResponse> caseResponses= new ArrayList<>();
-        CaseResponse caseResponse = new CaseResponse();
-
-        if(cases != null) {
-            for (CaseEntity caseEntity : cases) {
-                System.out.println(caseEntity.getClass());
-                System.out.println(CaseEntity.class);
-                caseResponse.setTitle(caseEntity.getTitle());
-                caseResponse.setBody(caseEntity.getBody());
-                caseResponse.setImportance(caseEntity.getImportance());
-                caseResponse.setStatus(caseEntity.getStatus());
-                caseResponse.setFile(caseEntity.getFile());
-                caseResponse.setTo(caseEntity.to);
-                caseResponse.setFrom(caseEntity.from);
-                caseResponse.setLastUpdate(caseEntity.getLastUpdate());
-                caseResponse.setCreatedDate(caseEntity.getCreatedDate());
-
-                caseResponses.add(caseResponse);
-            }
-        }
-
-        return caseResponses;
+        return query.getResultList();
     }
 
     public CaseEntity setCase(CaseEntity entity){
         System.out.println(entity.getClass());
         manager.persist(entity);
         return entity;
+    }
+
+    public List<CaseEntity> getAllCases(String from, String to) {
+        CriteriaBuilder cb = manager.getCriteriaBuilder();
+        CriteriaQuery<CaseEntity> cq = cb.createQuery(CaseEntity.class);
+        Root<CaseEntity> caseEntity = cq.from(CaseEntity.class);
+        cq.select(caseEntity);
+        List<Predicate> list = new ArrayList<>();
+        if (from != null){
+            Predicate predicate = cb.equal(caseEntity.get("from").get("mongoId"), from);
+            list.add(predicate);
+        }
+        if (to != null){
+            Predicate predicate = cb.equal(caseEntity.get("to").get("mongoId"), to);
+            list.add(predicate);
+        }
+        Predicate[] predicates = new Predicate[list.size()];
+        for (int i = 0; i < predicates.length; i++) {
+            predicates[i] = list.get(i);
+        }
+        Predicate and = cb.and(predicates);
+        cq.where(and);
+        TypedQuery<CaseEntity> q = manager.createQuery(cq);
+        return q.getResultList();
     }
 }

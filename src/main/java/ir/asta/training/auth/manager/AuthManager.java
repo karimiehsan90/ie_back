@@ -71,7 +71,7 @@ public class AuthManager {
     public ActionResult<Integer> setAccept(String id, String token) {
         ActionResult<Integer> result = new ActionResult<>();
         String massage = "";
-        Integer modified = 0;
+        int modified = 0;
         UserResponse userResponse = dao.authenticate(token);
         if (userResponse != null) {
             String role = userResponse.getRole();

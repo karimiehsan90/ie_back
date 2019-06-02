@@ -9,7 +9,6 @@ import com.mongodb.client.result.UpdateResult;
 import ir.asta.training.auth.entities.UserEntity;
 import ir.asta.training.auth.fixed.Role;
 import ir.asta.training.auth.fixed.UserMongo;
-import ir.asta.wise.core.datamanagement.ActionResult;
 import ir.asta.wise.core.response.UserResponse;
 import ir.asta.wise.core.response.UserResponseOthers;
 import org.bson.Document;
@@ -133,11 +132,12 @@ public class AuthDao {
     }
 
     public int setAccept(String id) {
-        UpdateResult users = database.getCollection("users").updateOne(
+        MongoCollection<Document> users = database.getCollection("users");
+        UpdateResult result = users.updateMany(
                 Filters.eq(UserMongo.objectId, new ObjectId(id)),
                 Updates.set(UserMongo.isAccept, true)
         );
-        return (int) users.getModifiedCount();
+        return (int) result.getModifiedCount();
     }
 
     public int setActive(String id) {
@@ -150,9 +150,13 @@ public class AuthDao {
 
     public int setDeactive(String id) {
         UpdateResult users = database.getCollection("users").updateOne(
-                Filters.eq(UserMongo.objectId, new ObjectId(id)),
+                Filters.and(
+                        Filters.eq(UserMongo.objectId, new ObjectId(id)),
+                        Filters.ne(UserMongo.role, Role.manager)
+                ),
                 Updates.set(UserMongo.isActive, false)
         );
+
         return (int) users.getModifiedCount();
     }
 

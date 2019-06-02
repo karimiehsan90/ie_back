@@ -38,6 +38,10 @@ public class CaseServiceImpl implements CaseService {
         return manager.getCaseToMe(token);
     }
 
+    @Override
+    public ActionResult<List<CaseResponse>> getAllCases(String token, String from, String to) {
+        return manager.getAllCases(token, from, to);
+    }
 
 
     @Override
