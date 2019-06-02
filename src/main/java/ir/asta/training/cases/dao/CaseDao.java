@@ -38,6 +38,19 @@ public class CaseDao {
         return entity;
     }
 
+    public void makeCaseInvalidFrom(String fromId){
+        Query query = manager.createQuery("UPDATE CaseEntity e SET e.from_id = -1"+
+                "WHERE e.from_id=:fromId");
+        query.setParameter("fromId",fromId).executeUpdate();
+    }
+
+    public void makeCaseInvalidTo(String toId){
+        Query query = manager.createQuery("UPDATE CaseEntity e SET e.to_id = -1"+
+                "WHERE e.to_id=:toId");
+        query.setParameter("toId",toId).executeUpdate();
+
+    }
+
     public List<CaseEntity> getAllCases(String from, String to) {
         CriteriaBuilder cb = manager.getCriteriaBuilder();
         CriteriaQuery<CaseEntity> cq = cb.createQuery(CaseEntity.class);

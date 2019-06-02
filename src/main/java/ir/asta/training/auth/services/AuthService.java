@@ -1,10 +1,12 @@
 package ir.asta.training.auth.services;
 
+import ir.asta.training.auth.entities.UserEntity;
 import ir.asta.wise.core.datamanagement.ActionResult;
 import ir.asta.wise.core.response.UserResponse;
 import ir.asta.wise.core.response.UserResponseOthers;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
@@ -29,27 +31,34 @@ public interface AuthService {
                                                @FormParam("role") String role
     ) throws UnsupportedEncodingException, NoSuchAlgorithmException;
 
+    @Path("/deleteUser")
+    @Produces(MediaType.APPLICATION_JSON)
+    @POST
+    public ActionResult<UserResponse> deleteUser(@FormParam("token") String token,
+                                               @FormParam("id") String id
+    ) throws UnsupportedEncodingException, NoSuchAlgorithmException;
+
+
     @Path("/setAccept")
     @Produces(MediaType.APPLICATION_JSON)
     @POST
-    public ActionResult<Integer> setAccept(@FormParam("id") String id ,
-                                          @FormParam("token") String token
-            )throws UnsupportedEncodingException, NoSuchAlgorithmException;
+    public ActionResult<Integer> setAccept(@FormParam("id") String id,
+                                           @FormParam("token") String token
+    ) throws UnsupportedEncodingException, NoSuchAlgorithmException;
 
     @Path("/setActive")
     @Produces(MediaType.APPLICATION_JSON)
     @POST
-    public ActionResult<Integer> setActive(@FormParam("id") String id ,
+    public ActionResult<Integer> setActive(@FormParam("id") String id,
                                            @FormParam("token") String token
-    )throws UnsupportedEncodingException, NoSuchAlgorithmException;
+    ) throws UnsupportedEncodingException, NoSuchAlgorithmException;
 
     @Path("/setdeactive")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    public ActionResult<Integer> setdeactive(@FormParam("id") String id ,
+    public ActionResult<Integer> setdeactive(@FormParam("id") String id,
                                              @FormParam("token") String token)
             throws UnsupportedEncodingException, NoSuchAlgorithmException;
-
 
 
     @POST
@@ -58,9 +67,6 @@ public interface AuthService {
     public ActionResult<List<UserResponseOthers>> getToPossibles(
             @FormParam("token") String token
     );
-
-
-
 
 
 }
