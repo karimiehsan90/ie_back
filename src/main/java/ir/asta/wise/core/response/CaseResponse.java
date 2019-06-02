@@ -86,31 +86,15 @@ public class CaseResponse {
         return createdDate;
     }
 
-    public void setCreatedDate(Date createdDate) {
-        JalaliCalendar calendar =new JalaliCalendar();
-        calendar.setTime(createdDate);
-        String date = "";
-        date+=calendar.get(calendar.YEAR);
-        date+="/";
-        date+=calendar.get(calendar.MONTH);
-        date+="/";
-        date+=calendar.get(calendar.DATE);
-        this.createdDate = date;
+    public void setCreatedDate(String createdDate) {
+        this.createdDate = createdDate;
     }
 
     public String getLastUpdate() {
         return lastUpdate;
     }
 
-    public void setLastUpdate(Date lastUpdate) {
-        JalaliCalendar calendar =new JalaliCalendar();
-        calendar.setTime(lastUpdate);
-        String date = "";
-        date+=calendar.get(Calendar.YEAR);
-        date+="/";
-        date+=calendar.get(Calendar.MONTH);
-        date+="/";
-        date+=calendar.get(Calendar.DATE);
-        this.lastUpdate = date;
+    public void setLastUpdate(String lastUpdate) {
+        this.lastUpdate = lastUpdate;
     }
 }

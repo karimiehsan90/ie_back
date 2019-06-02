@@ -156,6 +156,7 @@ public class AuthDao {
                 ),
                 Updates.set(UserMongo.isActive, false)
         );
+
         return (int) users.getModifiedCount();
     }
 
