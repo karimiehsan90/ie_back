@@ -124,12 +124,18 @@ public class CaseManager {
             response.setBody(entity.getBody());
             response.setCreatedDate(createdDate);
             response.setFile(entity.getFile());
-            response.setFrom(authDao.authenticate(entity.from.getMongoId()).getName());
+            UserResponse r = authDao.authenticate(entity.from.getMongoId());
+            if (r != null) {
+                response.setFrom(r.getName());
+            }
             response.setImportance(entity.getImportance());
             response.setLastUpdate(lastUpdate);
             response.setStatus(entity.getStatus());
             response.setTitle(entity.getTitle());
-            response.setTo(authDao.authenticate(entity.to.getMongoId()).getName());
+            r = authDao.authenticate(entity.to.getMongoId());
+            if (r != null) {
+                response.setTo(r.getName());
+            }
             responses.add(response);
         }
         return responses;
