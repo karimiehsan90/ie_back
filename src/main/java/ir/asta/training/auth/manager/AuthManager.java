@@ -22,6 +22,7 @@ import java.util.List;
 public class AuthManager {
     @Inject
     private AuthDao dao;
+    @Inject
     private CaseDao caseDao;
 
     public ActionResult<UserResponse> login(String email, String password)

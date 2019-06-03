@@ -39,16 +39,25 @@ public class CaseDao {
     }
 
     public void makeCaseInvalidFrom(String fromId){
-        Query query = manager.createQuery("UPDATE CaseEntity e SET e.from_id = -1"+
-                "WHERE e.from_id=:fromId");
-        query.setParameter("fromId",fromId).executeUpdate();
+        Query query = manager.createQuery("Select e from CaseEntity e WHERE e.from.id=:fromId");
+        List<CaseEntity> list = query.setParameter("fromId", Long.valueOf(fromId)).getResultList();
+        for (CaseEntity o:list) {
+            o.from = null;
+            manager.merge(o);
+        }
     }
 
     public void makeCaseInvalidTo(String toId){
-        Query query = manager.createQuery("UPDATE CaseEntity e SET e.to_id = -1"+
-                "WHERE e.to_id=:toId");
+        /*Query query = manager.createQuery("UPDATE CaseEntity e SET e.to.id = :val"+
+                "WHERE e.to.id=:toId").setParameter("val", -1);
         query.setParameter("toId",toId).executeUpdate();
-
+*/
+        Query query = manager.createQuery("Select e from CaseEntity e WHERE e.to.id=:fromId");
+        List<CaseEntity> list = query.setParameter("fromId", Long.valueOf(toId)).getResultList();
+        for (CaseEntity o:list) {
+            o.to = null;
+            manager.merge(o);
+        }
     }
 
     public List<CaseEntity> getAllCases(String from, String to) {
