@@ -37,6 +37,18 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    public ActionResult<UserResponse> registerByManager(
+            String password,
+            String rePassword,
+            String name,
+            String email,
+            String role
+    )
+            throws UnsupportedEncodingException, NoSuchAlgorithmException {
+        return manager.registerByManager(password, rePassword, name, email, role);
+    }
+
+    @Override
     public ActionResult<Integer> setAccept(String id ,
                                           String token)
     throws UnsupportedEncodingException, NoSuchAlgorithmException{

@@ -29,6 +29,17 @@ public interface AuthService {
                                                @FormParam("role") String role
     ) throws UnsupportedEncodingException, NoSuchAlgorithmException;
 
+    @Path("/registerByManager")
+    @Produces(MediaType.APPLICATION_JSON)
+    @POST
+    public ActionResult<UserResponse> registerByManager(@FormParam("password") String password,
+                                               @FormParam("re_password") String rePassword,
+                                               @FormParam("name") String name,
+                                               @FormParam("email") String email,
+                                               @FormParam("role") String role
+    ) throws UnsupportedEncodingException, NoSuchAlgorithmException;
+
+
     @Path("/setAccept")
     @Produces(MediaType.APPLICATION_JSON)
     @POST

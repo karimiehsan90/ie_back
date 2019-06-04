@@ -131,6 +131,29 @@ public class AuthDao {
         return response;
     }
 
+    public UserResponse registerUserByManager(
+            String hashPassword,
+            String name,
+            String email,
+            String role
+    ) {
+        MongoCollection<Document> users = database.getCollection("users");
+        Document document = new Document(UserMongo.firstName, name);
+        document.append(UserMongo.password, hashPassword).append(UserMongo.email, email);
+        document.append(UserMongo.role, role);
+        document.append(UserMongo.isActive, true);
+        document.append(UserMongo.isAccept, true);
+        users.insertOne(document);
+        String token = document.getObjectId(UserMongo.objectId).toHexString();
+        UserResponse response = new UserResponse();
+        response.setName(name);
+        response.setRole(role);
+        response.setToken(token);
+        UserEntity entity = new UserEntity(token);
+        manager.persist(entity);
+        return response;
+    }
+
     public int setAccept(String id) {
         MongoCollection<Document> users = database.getCollection("users");
         UpdateResult result = users.updateMany(

@@ -68,6 +68,31 @@ public class AuthManager {
         return result;
     }
 
+    @Transactional
+    public ActionResult<UserResponse> registerByManager(
+            String password,
+            String rePassword,
+            String name,
+            String email,
+            String role
+    ) throws UnsupportedEncodingException, NoSuchAlgorithmException {
+
+        ActionResult<UserResponse> result = new ActionResult<>();
+        String[] validate = validateRegister(password, rePassword, name, email, role);
+        if (validate.length > 0) {
+            result.setMessage(String.join("\n", validate));
+        } else {
+            if (!dao.containsUser(email)) {
+                UserResponse response = dao.registerUserByManager(hashPassword(password), name, email, role);
+                result.setData(response);
+                result.setSuccess(true);
+            } else {
+                result.setMessage("این ایمیل قبلا ثبت شده است");
+            }
+        }
+        return result;
+    }
+
     public ActionResult<Integer> setAccept(String id, String token) {
         ActionResult<Integer> result = new ActionResult<>();
         String massage = "";
