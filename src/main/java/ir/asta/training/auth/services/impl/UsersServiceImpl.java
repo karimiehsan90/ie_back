@@ -16,6 +16,7 @@ public class UsersServiceImpl implements UsersService {
     @Inject
     private UserManager manager ;
 
+    // dual request .
     @Override
     public ActionResult<UserResponse> editPro(String name, String email, String phone, String pass, String ppass , String token) throws UnsupportedEncodingException, NoSuchAlgorithmException {
         return manager.edit(name,pass,email,ppass,phone,token);
