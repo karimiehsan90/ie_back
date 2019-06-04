@@ -3,6 +3,7 @@ package ir.asta.training.auth.manager;
 import ir.asta.training.auth.dao.AuthDao;
 import ir.asta.training.auth.entities.UserEntity;
 import ir.asta.training.auth.fixed.Role;
+import ir.asta.training.cases.dao.CaseDao;
 import ir.asta.wise.core.datamanagement.ActionResult;
 import ir.asta.wise.core.response.UserResponse;
 import ir.asta.wise.core.response.UserResponseOthers;
@@ -21,6 +22,8 @@ import java.util.List;
 public class AuthManager {
     @Inject
     private AuthDao dao;
+    @Inject
+    private CaseDao caseDao;
 
     public ActionResult<UserResponse> login(String email, String password)
             throws UnsupportedEncodingException, NoSuchAlgorithmException {
@@ -93,6 +96,37 @@ public class AuthManager {
         return result;
     }
 
+    public ActionResult<UserResponse> deleteUser(String token, String id) {
+        ActionResult<UserResponse> result = new ActionResult<>();
+        String massage = "";
+        UserResponse manager = dao.authenticate(token);
+        long idUser = Long.parseLong(id);
+        System.out.println(idUser);
+        UserResponse user = dao.containsUserAsStuTeach(idUser);
+        if(manager != null){
+            if(manager.getRole().equals(Role.manager)){
+                if(user !=null){
+                    caseDao.makeCaseInvalidFrom(id);
+                    caseDao.makeCaseInvalidTo(id);
+
+                    dao.deleteUser(id,user);
+                    massage += "removing is successful";
+                    result.setSuccess(true);
+                    result.setData(user);
+                }else {
+                    massage += "this user doesn't exist";
+                }
+            }else {
+                massage += "it doesn't exist permission";
+            }
+
+        }else {
+            massage += "fail";
+        }
+        result.setMessage(massage);
+        return result;
+    }
+
     public ActionResult<Integer> setAccept(String id, String token) {
         ActionResult<Integer> result = new ActionResult<>();
         String massage = "";
@@ -159,7 +193,7 @@ public class AuthManager {
                     massage += "fail";
                 }
             } else {
-                massage += "it dosen't exist permission";
+                massage += "it doesn't exist permission";
             }
         }
         result.setMessage(massage);

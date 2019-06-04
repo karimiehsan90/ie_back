@@ -1,5 +1,6 @@
 package ir.asta.training.auth.services.impl;
 
+import ir.asta.training.auth.entities.UserEntity;
 import ir.asta.training.auth.manager.AuthManager;
 import ir.asta.training.auth.services.AuthService;
 import ir.asta.wise.core.datamanagement.ActionResult;
@@ -46,6 +47,11 @@ public class AuthServiceImpl implements AuthService {
     )
             throws UnsupportedEncodingException, NoSuchAlgorithmException {
         return manager.registerByManager(password, rePassword, name, email, role);
+    }
+    public ActionResult<UserResponse> deleteUser(String token,
+                                               String id
+    ) {
+        return manager.deleteUser(token,id);
     }
 
     @Override

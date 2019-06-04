@@ -58,6 +58,39 @@ public class AuthDao {
         return null;
     }
 
+    public UserResponse containsUserAsStuTeach(long id) {
+        Query query = manager.createQuery("select e from UserEntity e where e.id=:id");
+        List<UserEntity> list = query.setParameter("id", id).getResultList();
+        if (list.size() > 0) {
+            UserEntity entity = list.get(0);
+            FindIterable<Document> users = database.getCollection("users").find(Filters.and(
+                    Filters.eq(UserMongo.objectId, new ObjectId(entity.getMongoId())),
+                    Filters.eq(UserMongo.isAccept, true),
+                    Filters.eq(UserMongo.isActive, true),
+                    Filters.or(
+                            Filters.eq(UserMongo.role, Role.student),
+                            Filters.eq(UserMongo.role, Role.teacher)
+                    )
+            ));
+            if (users.iterator().hasNext()) {
+                Document next = users.iterator().next();
+                return convertDocumentToUserResponse(next);
+            }
+        }
+        return null;
+    }
+
+    public void deleteUser(String id , UserResponse entity) {
+        long idUser = Long.parseLong(id);
+        Query query = manager.createQuery("delete from UserEntity e where e.id=:id");
+        query.setParameter("id", idUser);
+        query.executeUpdate();
+
+        database.getCollection("users").
+                deleteOne(new Document("_id",new ObjectId(entity.getToken())));
+
+    }
+
     public UserEntity getByToken(String token) {
         Query query = manager.createQuery("select e from UserEntity e where e.mongoId=:token")
                 .setParameter("token", token);
@@ -86,7 +119,9 @@ public class AuthDao {
     public UserResponse authenticate(String token) {
         ObjectId id = new ObjectId(token);
         MongoCollection<Document> users = database.getCollection("users");
-        FindIterable<Document> documents = users.find(Filters.and(Filters.eq(UserMongo.objectId, id), Filters.eq(UserMongo.isActive, true),
+        FindIterable<Document> documents = users.find(Filters.and(
+                Filters.eq(UserMongo.objectId, id),
+                Filters.eq(UserMongo.isActive, true),
                 Filters.eq(UserMongo.isAccept, true)));
         if (documents.iterator().hasNext()) {
             Document next = documents.iterator().next();
