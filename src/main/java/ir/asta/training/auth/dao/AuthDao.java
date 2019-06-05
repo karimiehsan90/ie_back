@@ -65,8 +65,6 @@ public class AuthDao {
             UserEntity entity = list.get(0);
             FindIterable<Document> users = database.getCollection("users").find(Filters.and(
                     Filters.eq(UserMongo.objectId, new ObjectId(entity.getMongoId())),
-                    Filters.eq(UserMongo.isAccept, true),
-                    Filters.eq(UserMongo.isActive, true),
                     Filters.or(
                             Filters.eq(UserMongo.role, Role.student),
                             Filters.eq(UserMongo.role, Role.teacher)
@@ -78,6 +76,15 @@ public class AuthDao {
             }
         }
         return null;
+    }
+
+    public long getUserSQLIDBymongoID(String mongoId){
+        Query query = manager.createQuery("select e from UserEntity e where e.mongoId=:mongoId");
+        List<UserEntity> list = query.setParameter("mongoId", mongoId).getResultList();
+        if (!list.isEmpty()){
+            return list.get(0).getId();
+        }
+        else return -9l;
     }
 
     public void deleteUser(String id , UserResponse entity) {

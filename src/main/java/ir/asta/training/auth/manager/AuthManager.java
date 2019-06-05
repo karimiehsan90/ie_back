@@ -95,21 +95,22 @@ public class AuthManager {
         }
         return result;
     }
-
+    @Transactional
     public ActionResult<UserResponse> deleteUser(String token, String id) {
         ActionResult<UserResponse> result = new ActionResult<>();
         String massage = "";
         UserResponse manager = dao.authenticate(token);
-        long idUser = Long.parseLong(id);
+        long idUser = dao.getUserSQLIDBymongoID(id);
+        String idUserStr = ""+idUser ;
         System.out.println(idUser);
         UserResponse user = dao.containsUserAsStuTeach(idUser);
         if(manager != null){
             if(manager.getRole().equals(Role.manager)){
                 if(user !=null){
-                    caseDao.makeCaseInvalidFrom(id);
-                    caseDao.makeCaseInvalidTo(id);
+                    caseDao.makeCaseInvalidFrom(idUserStr);
+                    caseDao.makeCaseInvalidTo(idUserStr);
 
-                    dao.deleteUser(id,user);
+                    dao.deleteUser(idUserStr,user);
                     massage += "removing is successful";
                     result.setSuccess(true);
                     result.setData(user);
