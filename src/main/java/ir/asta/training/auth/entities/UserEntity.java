@@ -1,6 +1,7 @@
 package ir.asta.training.auth.entities;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -18,6 +19,9 @@ public class UserEntity {
 
     @OneToMany(mappedBy = "to")
     private Set<CaseEntity> receives;
+
+    @OneToMany(mappedBy = "from")
+    private List<ActionEntity> actions;
 
     public UserEntity(String mongoId) {
         this.mongoId = mongoId;

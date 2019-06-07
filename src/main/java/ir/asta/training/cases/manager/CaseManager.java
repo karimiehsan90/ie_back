@@ -34,6 +34,9 @@ public class CaseManager {
     @Inject
     private CaseDao caseDao;
 
+    @Inject
+    private FileManager fileManager;
+
 
     @Transactional
     public ActionResult<String> setCase(
@@ -68,21 +71,7 @@ public class CaseManager {
                 if (authenticate != null) {
                     UserEntity from = authDao.getByToken(token);
                     Date now = new Date();
-                    String file = null;
-                    if (attachment != null) {
-                        String filename = "webapps/ticketing/" + attachment.getContentDisposition().getParameter("filename");
-                        Path path;
-                        do {
-                            int index = filename.lastIndexOf(".");
-                            String fName = filename.substring(0, index);
-                            String extension = filename.substring(index + 1);
-                            filename = fName + "1." + extension;
-                            path = Paths.get(filename);
-                        } while (Files.exists(path));
-                        file = filename.substring("webapps".length());
-                        InputStream in = attachment.getObject(InputStream.class);
-                        Files.copy(in, path);
-                    }
+                    String file = fileManager.saveFile(attachment);
                     CaseEntity caseEntity = new CaseEntity(title, body, now, now, from, toEntity, imp, Status.OPEN, file);
                     caseDao.setCase(caseEntity);
                     result.setSuccess(true);

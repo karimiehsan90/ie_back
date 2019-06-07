@@ -6,6 +6,7 @@ import ir.asta.wise.core.enums.Status;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "cases")
@@ -43,6 +44,9 @@ public class CaseEntity {
 
     @Column(name = "file")
     private String file;
+
+    @OneToMany(mappedBy = "caseEntity")
+    private List<ActionEntity> actions;
 
     public CaseEntity() {
     }

@@ -80,4 +80,18 @@ public class CaseDao {
         TypedQuery<CaseEntity> q = manager.createQuery(cq);
         return q.getResultList();
     }
+
+    public CaseEntity getByFromOrTo(long caseId, String token){
+        Query query = manager.createQuery("select e from CaseEntity e where e.id = :id and (e.from.mongoId = :mongoId or e.to.mongoId = :mongoId)");
+        query.setParameter("id", caseId).setParameter("mongoId", token);
+        List<CaseEntity> list = query.getResultList();
+        if (list.size() > 0){
+            return list.get(0);
+        }
+        return null;
+    }
+
+    public void update(CaseEntity entity){
+        manager.merge(entity);
+    }
 }

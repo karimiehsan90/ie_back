@@ -252,5 +252,14 @@ public class AuthDao {
         return list;
     }
 
+    public UserEntity getById(Long id){
+        Query query = manager.createQuery("select u from UserEntity u where u.id = :id");
+        query.setParameter("id", id);
+        List<UserEntity> resultList = query.getResultList();
+        if (resultList.size() > 0){
+            return resultList.get(0);
+        }
+        return null;
+    }
 
 }

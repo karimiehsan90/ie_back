@@ -1,5 +1,5 @@
 package ir.asta.wise.core.enums;
 
 public enum Status {
-    OPEN, CLOSE
+    OPEN, CLOSE, IN_QUEUE, POSTPONED
 }
