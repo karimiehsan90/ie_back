@@ -7,6 +7,7 @@ import org.apache.cxf.jaxrs.ext.multipart.Attachment;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.io.IOException;
 
 @Named("actionService")
 public class ActionServiceImpl implements ActionService {
@@ -15,7 +16,7 @@ public class ActionServiceImpl implements ActionService {
     private ActionManager manager;
 
     @Override
-    public ActionResult<Boolean> setAction(String token, long caseId, String content, int status, Attachment attachment, Long to) {
+    public ActionResult<Boolean> setAction(String token, long caseId, String content, int status, Attachment attachment, Long to) throws IOException {
         return manager.setAction(token, caseId, content, status, attachment, to);
     }
 }
