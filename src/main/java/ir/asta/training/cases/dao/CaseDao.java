@@ -8,10 +8,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,25 +36,25 @@ public class CaseDao {
     }
 
     public void makeCaseInvalidFrom(String fromId){
-        Query query = manager.createQuery("Select e from CaseEntity e WHERE e.from.id=:fromId");
-        List<CaseEntity> list = query.setParameter("fromId", Long.valueOf(fromId)).getResultList();
-        for (CaseEntity o:list) {
-            o.from = null;
-            manager.merge(o);
-        }
+        CriteriaBuilder cb = manager.getCriteriaBuilder();
+        CriteriaUpdate<CaseEntity> cq = cb.createCriteriaUpdate(CaseEntity.class);
+        Root<CaseEntity> root = cq.from(CaseEntity.class);
+        Predicate equal = cb.equal(root.get("from").get("id"), Long.valueOf(fromId));
+        cq.where(equal);
+        cq.set("from", null);
+        Query query = manager.createQuery(cq);
+        query.executeUpdate();
     }
 
     public void makeCaseInvalidTo(String toId){
-        /*Query query = manager.createQuery("UPDATE CaseEntity e SET e.to.id = :val"+
-                "WHERE e.to.id=:toId").setParameter("val", -1);
-        query.setParameter("toId",toId).executeUpdate();
-*/
-        Query query = manager.createQuery("Select e from CaseEntity e WHERE e.to.id=:fromId");
-        List<CaseEntity> list = query.setParameter("fromId", Long.valueOf(toId)).getResultList();
-        for (CaseEntity o:list) {
-            o.to = null;
-            manager.merge(o);
-        }
+        CriteriaBuilder cb = manager.getCriteriaBuilder();
+        CriteriaUpdate<CaseEntity> cq = cb.createCriteriaUpdate(CaseEntity.class);
+        Root<CaseEntity> root = cq.from(CaseEntity.class);
+        Predicate equal = cb.equal(root.get("to").get("id"), Long.valueOf(toId));
+        cq.where(equal);
+        cq.set("to", null);
+        Query query = manager.createQuery(cq);
+        query.executeUpdate();
     }
 
     public List<CaseEntity> getAllCases(String from, String to) {
