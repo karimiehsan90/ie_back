@@ -243,6 +243,14 @@
 			<version>3.10.1</version>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/com.google.api-client/google-api-client -->
+		<dependency>
+			<groupId>com.google.api-client</groupId>
+			<artifactId>google-api-client</artifactId>
+			<version>1.29.2</version>
+		</dependency>
+
+
 
 
 	</dependencies>

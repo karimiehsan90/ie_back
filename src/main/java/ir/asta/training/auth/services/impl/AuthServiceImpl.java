@@ -10,7 +10,9 @@ import ir.asta.wise.core.response.UserResponseOthers;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.FormParam;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.security.GeneralSecurityException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
@@ -78,6 +80,11 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public ActionResult<List<UserResponseOthers>> getToPossibles(String token) {
         return manager.getPossibles(token);
+    }
+
+    @Override
+    public ActionResult<UserResponse> googleLogin(String idToken) throws GeneralSecurityException, IOException {
+        return manager.googleLogin(idToken);
     }
 
 

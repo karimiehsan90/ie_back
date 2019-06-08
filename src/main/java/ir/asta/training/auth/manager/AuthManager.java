@@ -1,5 +1,10 @@
 package ir.asta.training.auth.manager;
 
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.jackson2.JacksonFactory;
 import ir.asta.training.auth.dao.AuthDao;
 import ir.asta.training.auth.entities.UserEntity;
 import ir.asta.training.auth.fixed.Role;
@@ -11,11 +16,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
+import java.security.GeneralSecurityException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Named("authManager")
@@ -245,6 +253,29 @@ public class AuthManager {
             result.setData(dao.getPossibles());
         } else {
             result.setMessage("شما لاگین نیستید");
+        }
+        return result;
+    }
+
+    public ActionResult<UserResponse> googleLogin(String idTokenString) throws GeneralSecurityException, IOException {
+        ActionResult<UserResponse> result = new ActionResult<>();
+        JsonFactory jsonFactory = new JacksonFactory();
+        GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), jsonFactory)
+                .setAudience(Collections.singletonList("689217686363-o57mhgp17553uibqed439j0u2mk3sc54.apps.googleusercontent.com"))
+                .build();
+        GoogleIdToken idToken = verifier.verify(idTokenString);
+        if (idToken != null){
+            GoogleIdToken.Payload payload = idToken.getPayload();
+            String email = payload.getEmail();
+            UserResponse response = dao.getByEmail(email);
+            result.setData(response);
+            result.setSuccess(response != null);
+            if (response == null){
+                result.setMessage("کاربر یافت نشد");
+            }
+        }
+        else {
+            result.setMessage("توکن معتبر نیست");
         }
         return result;
     }
