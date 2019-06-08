@@ -2,6 +2,7 @@ package ir.asta.training.cases.manager;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ir.asta.wise.core.response.NotificationConf;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -19,19 +20,36 @@ public class NotificationManagerTest {
     @Inject
     private NotificationManager manager;
 
-    @Test
-    public void testSMS() throws IOException {
-        String json = "";
+    private NotificationConf conf;
+
+    private boolean setup = false;
+
+    @Before
+    public void setConf() throws IOException {
+        if (setup){
+            return;
+        }
+        StringBuilder json = new StringBuilder();
         try (Scanner scanner = new Scanner(new FileInputStream("conf/notification.json"))) {
             while (scanner.hasNextLine()){
-                json += scanner.nextLine() + "\n";
+                json.append(scanner.nextLine()).append("\n");
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
         ObjectMapper mapper = new ObjectMapper();
-        NotificationConf conf = mapper.readValue(json, NotificationConf.class);
-        System.out.println(conf.getDefaultText());
+        conf = mapper.readValue(json.toString(), NotificationConf.class);
+        System.out.println("here");
+        setup = true;
+    }
+
+    @Test
+    public void testSMS() throws IOException {
         manager.sendSMS(conf.getDefaultText(),conf.getDefaultNumber());
+    }
+
+    @Test
+    public void testEmail(){
+        manager.sendEmail(conf.getDefaultText(), "<h1>"+ conf.getDefaultText() + "</h1>", conf.getEmail());
     }
 }

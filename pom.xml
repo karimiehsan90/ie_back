@@ -148,7 +148,16 @@
 		</dependency>
 		
 		<!-- WISE Web -->
-
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+			<version>5.1.5.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.mail</groupId>
+			<artifactId>javax.mail</artifactId>
+			<version>1.6.0</version>
+		</dependency>
 		<!-- CXF -->
 		<dependency>
 			<groupId>org.apache.cxf</groupId>
