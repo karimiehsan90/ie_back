@@ -1,5 +1,6 @@
 package ir.asta.training.cases.manager;
 
+import ir.asta.training.auth.entities.ActionEntity;
 import ir.asta.training.auth.entities.UserEntity;
 import ir.asta.training.auth.dao.AuthDao;
 import ir.asta.training.auth.fixed.Role;
@@ -8,6 +9,7 @@ import ir.asta.training.auth.entities.CaseEntity;
 import ir.asta.wise.core.datamanagement.ActionResult;
 import ir.asta.wise.core.enums.Importance;
 import ir.asta.wise.core.enums.Status;
+import ir.asta.wise.core.response.ActionResponse;
 import ir.asta.wise.core.response.CaseResponse;
 import ir.asta.wise.core.response.JalaliCalendar;
 import ir.asta.wise.core.response.UserResponse;
@@ -128,7 +130,7 @@ public class CaseManager {
             response.setTitle(entity.getTitle());
             response.setId(""+entity.getId());
             response.setHappy(entity.isHappy());
-
+            response.setActions(convertActionEntitiesToResponse(entity.getActions()));
             r = null;
             if (entity.to != null) {
                 r = authDao.authenticate(entity.to.getMongoId());
@@ -139,6 +141,25 @@ public class CaseManager {
             responses.add(response);
         }
         return responses;
+    }
+
+    private List<ActionResponse> convertActionEntitiesToResponse(List<ActionEntity> actions) {
+        List<ActionResponse> list = new ArrayList<>(actions.size());
+        for (ActionEntity entity:actions) {
+            ActionResponse response = new ActionResponse();
+            response.setContent(entity.getContent());
+            response.setDate(convertDateToString(entity.getDate()));
+            response.setFile(entity.getFile());
+            if (entity.from != null){
+                String token = entity.from.getMongoId();
+                UserResponse authenticate = authDao.authenticate(token);
+                if (authenticate != null){
+                    response.setFrom(authenticate.getName());
+                }
+            }
+            list.add(response);
+        }
+        return list;
     }
 
     private String convertDateToString(Date dt) {
