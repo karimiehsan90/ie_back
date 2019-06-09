@@ -59,6 +59,10 @@
 		<constructor-arg value="27017" name="port"/>
 	</bean>
 
+	<bean class="redis.clients.jedis.Jedis" id="jedis">
+		<constructor-arg value="localhost"/>
+	</bean>
+
 	<bean id="mongoDatabase" factory-bean="mongoClient" factory-method="getDatabase">
 
 		<constructor-arg type="java.lang.String" value="ticketing"/>

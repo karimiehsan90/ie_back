@@ -9,6 +9,7 @@ import ir.asta.training.auth.dao.AuthDao;
 import ir.asta.training.auth.entities.UserEntity;
 import ir.asta.training.auth.fixed.Role;
 import ir.asta.training.cases.dao.CaseDao;
+import ir.asta.training.cases.manager.NotificationManager;
 import ir.asta.wise.core.datamanagement.ActionResult;
 import ir.asta.wise.core.response.UserResponse;
 import ir.asta.wise.core.response.UserResponseOthers;
@@ -25,6 +26,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 @Named("authManager")
 public class AuthManager {
@@ -32,6 +34,9 @@ public class AuthManager {
     private AuthDao dao;
     @Inject
     private CaseDao caseDao;
+
+    @Inject
+    private NotificationManager notificationManager;
 
     public ActionResult<UserResponse> login(String email, String password)
             throws UnsupportedEncodingException, NoSuchAlgorithmException {
@@ -278,5 +283,64 @@ public class AuthManager {
             result.setMessage("توکن معتبر نیست");
         }
         return result;
+    }
+
+    public ActionResult<Boolean> forgetPassword(String phone) {
+        ActionResult<Boolean> result = new ActionResult<>();
+        if (phone != null && dao.containsPhone(phone)){
+            String otp = generateOTP();
+            Thread thread = new Thread(() -> {
+                String text = "your code : " + otp;
+                try {
+                    notificationManager.sendSMS(text, phone);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+            thread.start();
+            dao.setOTP(phone, otp);
+            result.setSuccess(true);
+            result.setMessage("کد با موفقیت به شماره تلفن شما ارسال شد");
+        }
+        else {
+            result.setMessage("شماره تلفن یافت نشد");
+        }
+        return result;
+    }
+
+    private String generateOTP() {
+        StringBuilder s = new StringBuilder();
+        Random random = new Random();
+        for (int i = 0; i < 6; i++) {
+            s.append((char) ('0' + random.nextInt(10)));
+        }
+        return s.toString();
+    }
+
+    public ActionResult<Boolean> submitForgetPassword(String phone, String code) throws UnsupportedEncodingException, NoSuchAlgorithmException {
+        String otp = dao.getOTP(phone);
+        ActionResult<Boolean> result = new ActionResult<>();
+        if (otp != null && otp.equals(code)){
+            String newPassword = generatePassword();
+            dao.updateByPhone(phone, hashPassword(newPassword));
+            new Thread(() -> {
+                String text = "your new password : " + newPassword;
+                try {
+                    notificationManager.sendSMS(text, phone);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }).start();
+            result.setSuccess(true);
+            result.setMessage("رمز عبور جدید به شماره تلفن شما ارسال شد");
+        }
+        else {
+            result.setMessage("کد درست نیست");
+        }
+        return result;
+    }
+
+    private String generatePassword() {
+        return generateOTP();
     }
 }

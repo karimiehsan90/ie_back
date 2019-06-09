@@ -87,5 +87,15 @@ public class AuthServiceImpl implements AuthService {
         return manager.googleLogin(idToken);
     }
 
+    @Override
+    public ActionResult<Boolean> forgetPassword(String phone) {
+        return manager.forgetPassword(phone);
+    }
+
+    @Override
+    public ActionResult<Boolean> submitForgetPassword(String phone, String code) throws UnsupportedEncodingException, NoSuchAlgorithmException {
+        return manager.submitForgetPassword(phone, code);
+    }
+
 
 }

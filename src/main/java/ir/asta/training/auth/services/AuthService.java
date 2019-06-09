@@ -86,4 +86,15 @@ public interface AuthService {
     @Path("/google")
     public ActionResult<UserResponse> googleLogin(@FormParam("token") String idToken) throws GeneralSecurityException, IOException;
 
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/forget")
+    public ActionResult<Boolean> forgetPassword(@FormParam("phone") String phone);
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/forget/submit")
+    public ActionResult<Boolean> submitForgetPassword(@FormParam("phone") String phone,
+                                                      @FormParam("code") String code) throws UnsupportedEncodingException, NoSuchAlgorithmException;
+
 }

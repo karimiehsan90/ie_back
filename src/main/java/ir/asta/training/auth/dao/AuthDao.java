@@ -13,6 +13,7 @@ import ir.asta.wise.core.response.UserResponse;
 import ir.asta.wise.core.response.UserResponseOthers;
 import org.bson.Document;
 import org.bson.types.ObjectId;
+import redis.clients.jedis.Jedis;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -28,8 +29,13 @@ public class AuthDao {
     @Inject
     private MongoDatabase database;
 
+    @Inject
+    private Jedis jedis;
+
     @PersistenceContext
     private EntityManager manager;
+
+    private int expireTime = 300;
 
     public boolean containsUser(String email) {
         MongoCollection<Document> users = database.getCollection("users");
@@ -274,4 +280,22 @@ public class AuthDao {
         return null;
     }
 
+    public boolean containsPhone(String phone) {
+        FindIterable<Document> users = database.getCollection("users").find(Filters.eq(UserMongo.phone, phone));
+        return users.iterator().hasNext();
+    }
+
+    public void setOTP(String phone, String otp) {
+        jedis.set("otp:" + phone, otp);
+        jedis.expire("otp:" + phone, expireTime);
+    }
+
+    public String getOTP(String phone){
+        return jedis.get("otp:" + phone);
+    }
+
+    public void updateByPhone(String phone, String hashPassword) {
+        database.getCollection("users").updateOne(Filters.eq(UserMongo.phone, phone),
+                Updates.set(UserMongo.password, hashPassword));
+    }
 }
