@@ -9,6 +9,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class CaseResponse {
+    private String id;
     private String title;
     private String body;
     private String to;
@@ -16,6 +17,10 @@ public class CaseResponse {
     private String file;
     private Importance importance;
     private Status status;
+    private Boolean happy;
+
+
+
     @JsonProperty("created_date")
     private String createdDate;
     @JsonProperty("last_answer")
@@ -25,6 +30,14 @@ public class CaseResponse {
 
     public CaseResponse() {
     }
+
+    public String getId() { return id; }
+
+    public void setId(String id) { this.id = id; }
+
+    public Boolean isHappy() { return happy; }
+
+    public void setHappy(Boolean happy) { this.happy = happy; }
 
     public String getTitle() {
         return title;

@@ -45,5 +45,12 @@ public interface CaseService {
                                                         @FormParam("from") String from,
                                                         @FormParam("to") String to);
 
+    @Path("/setRate")
+    @Produces(MediaType.APPLICATION_JSON)
+    @POST
+    public ActionResult<Boolean> setRate(    @FormParam("token") String token,
+                                                        @FormParam("id") long id,
+                                             @FormParam("happy") boolean h)  throws IOException, NoSuchAlgorithmException;
+
 
 }

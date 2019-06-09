@@ -90,6 +90,15 @@ public class CaseDao {
         }
         return null;
     }
+    public CaseEntity getById(long caseId){
+        Query query = manager.createQuery("select e from CaseEntity e where e.id = :id ");
+        query.setParameter("id", caseId);
+        List<CaseEntity> list = query.getResultList();
+        if (list.size() > 0){
+            return list.get(0);
+        }
+        return null;
+    }
 
     public void update(CaseEntity entity){
         manager.merge(entity);

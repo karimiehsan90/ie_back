@@ -124,6 +124,9 @@ public class CaseManager {
             response.setLastUpdate(lastUpdate);
             response.setStatus(entity.getStatus());
             response.setTitle(entity.getTitle());
+            response.setId(""+entity.getId());
+            response.setHappy(entity.isHappy());
+
             r = null;
             if (entity.to != null) {
                 r = authDao.authenticate(entity.to.getMongoId());
@@ -200,5 +203,20 @@ public class CaseManager {
         }
         return result;
 
+    }
+    @Transactional
+    public ActionResult<Boolean> setRate(String token, long caseID , Boolean h) {
+        ActionResult<Boolean>result=new ActionResult<>();
+        UserResponse user = authDao.authenticate(token);
+        if (user != null){
+            CaseEntity cas = caseDao.getById(caseID);
+            cas.setHappy(h);
+            caseDao.update(cas);
+            result.setSuccess(true);
+            result.setData(true);
+        }else{
+            result.setMessage("login konid");
+        }
+        return result;
     }
 }

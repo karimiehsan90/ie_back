@@ -28,6 +28,9 @@ public class CaseEntity {
     @Column(name = "last_update")
     private Date lastUpdate;
 
+    @Column(name = "happy" , columnDefinition = "boolean" , nullable = true)
+    private Boolean happy;
+
     @ManyToOne
     @JoinColumn(name = "from_id")
     public UserEntity from;
@@ -125,5 +128,13 @@ public class CaseEntity {
 
     public void setLastUpdate(Date lastUpdate) {
         this.lastUpdate = lastUpdate;
+    }
+
+    public Boolean isHappy() {
+        return happy;
+    }
+
+    public void setHappy(Boolean happy) {
+        this.happy = happy;
     }
 }

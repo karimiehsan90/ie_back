@@ -54,4 +54,8 @@ public class CaseServiceImpl implements CaseService {
             throws IOException, NoSuchAlgorithmException {
         return manager.setCase(title,to,importance,body,token, attachment);
     }
+    @Override
+    public ActionResult<Boolean>setRate(String token,long caseID,boolean h)  throws IOException, NoSuchAlgorithmException{
+        return manager.setRate(token,caseID,h);
+    }
 }
