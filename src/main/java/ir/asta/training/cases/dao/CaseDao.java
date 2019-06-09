@@ -10,6 +10,7 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Named("caseDao")
@@ -102,5 +103,31 @@ public class CaseDao {
 
     public void update(CaseEntity entity){
         manager.merge(entity);
+    }
+
+    public List<CaseEntity> getAllVotedCases(Date from, Date to) {
+        CriteriaBuilder cb = manager.getCriteriaBuilder();
+        CriteriaQuery<CaseEntity> cq = cb.createQuery(CaseEntity.class);
+        Root<CaseEntity> caseEntity = cq.from(CaseEntity.class);
+        cq.select(caseEntity);
+        List<Predicate> list = new ArrayList<>();
+        if (from != null){
+            Predicate predicate = cb.greaterThan(caseEntity.get("createdDate"), from);
+            list.add(predicate);
+        }
+        if (to != null){
+            Predicate predicate = cb.lessThan(caseEntity.get("lastUpdate"), to);
+            list.add(predicate);
+        }
+        list.add(cb.isNotNull(caseEntity.get("happy")));
+
+        Predicate[] predicates = new Predicate[list.size()];
+        for (int i = 0; i < predicates.length; i++) {
+            predicates[i] = list.get(i);
+        }
+        Predicate and = cb.and(predicates);
+        cq.where(and);
+        TypedQuery<CaseEntity> q = manager.createQuery(cq);
+        return q.getResultList();
     }
 }

@@ -21,6 +21,8 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -216,6 +218,40 @@ public class CaseManager {
             result.setData(true);
         }else{
             result.setMessage("login konid");
+        }
+        return result;
+    }
+
+    public ActionResult<List<CaseResponse>> getVotedAllCases(String token, String from, String to) {
+        UserResponse authenticate = authDao.authenticate(token);
+        ActionResult<List<CaseResponse>> result = new ActionResult<>();
+        if (authenticate != null && authenticate.getRole().equals(Role.manager)) {
+            result.setSuccess(true);
+            String msg = "";
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date fromDate = null ;
+            Date toDate = null ;
+            if (!"".equals(from) && from != null){
+                try {
+                    fromDate = format.parse(from+" 00:00:00");
+                } catch (ParseException e) {
+                    msg+="from date parsing error ";
+                    result.setSuccess(false);
+                }
+            }
+            if (!"".equals(to) && to != null){
+                try {
+                    toDate = format.parse(to+" 23:59:59");
+                } catch (ParseException e) {
+                    msg+="to date parsing error ";
+                    result.setSuccess(false);
+                }
+            }
+            result.setMessage(msg);
+            if (result.isSuccess())
+                result.setData(convertCaseEntitiesToResponse(caseDao.getAllVotedCases(fromDate, toDate)));
+        } else {
+            result.setMessage("شما اجازه دسترسی به این مورد را ندارید");
         }
         return result;
     }

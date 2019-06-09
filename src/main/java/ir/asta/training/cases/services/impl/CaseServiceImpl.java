@@ -43,6 +43,10 @@ public class CaseServiceImpl implements CaseService {
         return manager.getAllCases(token, from, to);
     }
 
+    @Override
+    public ActionResult<List<CaseResponse>> getAllVotedCasesBetween(String token, String fromDate, String toDate) {
+        return manager.getVotedAllCases(token, fromDate, toDate);
+    }
 
     @Override
     public ActionResult<String> setCase(String title,

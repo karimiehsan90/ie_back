@@ -44,6 +44,13 @@ public interface CaseService {
     public ActionResult<List<CaseResponse>> getAllCases(@FormParam("token") String token,
                                                         @FormParam("from") String from,
                                                         @FormParam("to") String to);
+    @Path("/report")
+    @Produces(MediaType.APPLICATION_JSON)
+    @POST
+    public ActionResult<List<CaseResponse>> getAllVotedCasesBetween(@FormParam("token") String token,
+                                                        @FormParam("from") String fromDate,
+                                                        @FormParam("to") String toDate);
+
 
     @Path("/setRate")
     @Produces(MediaType.APPLICATION_JSON)
