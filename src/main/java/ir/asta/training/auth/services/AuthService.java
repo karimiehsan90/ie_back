@@ -8,7 +8,9 @@ import ir.asta.wise.core.response.UserResponseOthers;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.security.GeneralSecurityException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
@@ -79,5 +81,9 @@ public interface AuthService {
             @FormParam("token") String token
     );
 
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/google")
+    public ActionResult<UserResponse> googleLogin(@FormParam("token") String idToken) throws GeneralSecurityException, IOException;
 
 }

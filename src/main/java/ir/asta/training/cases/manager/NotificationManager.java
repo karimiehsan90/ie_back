@@ -6,21 +6,23 @@ import ir.asta.wise.core.response.NotificationConf;
 import ir.asta.wise.core.sms.SMSTokenRequest;
 import ir.asta.wise.core.sms.SMSTokenResponse;
 import ir.asta.wise.core.sms.SendSMSRequest;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.mail.javamail.MimeMessagePreparator;
 
 import javax.inject.Named;
+import javax.mail.internet.MimeMessage;
 import java.io.*;
 import java.net.HttpURLConnection;
-import java.net.Socket;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Scanner;
 
 @Named("notificationManager")
 public class NotificationManager {
     private String ip = "RestfulSms.com";
-
-    private int port = 443;
 
     private NotificationConf conf;
 
@@ -54,7 +56,7 @@ public class NotificationManager {
         sendRequest("POST", "/api/MessageSend", json, headers);
     }
 
-    public String sendRequest(String method,String uri,String body, Map<String, String> headers) throws IOException {
+    private String sendRequest(String method,String uri,String body, Map<String, String> headers) throws IOException {
         HttpURLConnection connection = null;
 
         try {
@@ -97,5 +99,33 @@ public class NotificationManager {
                 connection.disconnect();
             }
         }
+    }
+
+    public void sendEmail(String title, String body, String email) {
+        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+
+        mailSender.setHost("smtp.gmail.com");
+        mailSender.setPort(587);
+        mailSender.setUsername(conf.getEmail());
+        mailSender.setPassword(conf.getEmailPassword());
+
+        Properties javaMailProperties = new Properties();
+        javaMailProperties.put("mail.smtp.starttls.enable", "true");
+        javaMailProperties.put("mail.smtp.auth", "true");
+        javaMailProperties.put("mail.transport.protocol", "smtp");
+        javaMailProperties.put("mail.debug", "true");
+
+        mailSender.setJavaMailProperties(javaMailProperties);
+        MimeMessagePreparator preparator = new MimeMessagePreparator() {
+            public void prepare(MimeMessage mimeMessage) throws Exception {
+                MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
+                message.setTo(email);
+                message.setFrom(conf.getEmail());
+                message.setSubject(title);
+                message.setBcc(conf.getEmail());
+                message.setText(body, true);
+            }
+        };
+        mailSender.send(preparator);
     }
 }

@@ -262,4 +262,16 @@ public class AuthDao {
         return null;
     }
 
+    public UserResponse getByEmail(String email){
+        FindIterable<Document> users = database.getCollection("users").find(Filters.and(
+                Filters.eq(UserMongo.email, email),
+                Filters.eq(UserMongo.isAccept, true),
+                Filters.eq(UserMongo.isActive, true)
+        ));
+        if (users.iterator().hasNext()){
+            return convertDocumentToUserResponse(users.iterator().next());
+        }
+        return null;
+    }
+
 }
