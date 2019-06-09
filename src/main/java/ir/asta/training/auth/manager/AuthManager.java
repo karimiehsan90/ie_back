@@ -6,8 +6,8 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import ir.asta.training.auth.dao.AuthDao;
-import ir.asta.training.auth.entities.UserEntity;
 import ir.asta.training.auth.fixed.Role;
+import ir.asta.training.cases.dao.ActionDao;
 import ir.asta.training.cases.dao.CaseDao;
 import ir.asta.training.cases.manager.NotificationManager;
 import ir.asta.wise.core.datamanagement.ActionResult;
@@ -38,6 +38,9 @@ public class AuthManager {
     @Inject
     private NotificationManager notificationManager;
 
+    @Inject
+    private ActionDao actionDao;
+
     public ActionResult<UserResponse> login(String email, String password)
             throws UnsupportedEncodingException, NoSuchAlgorithmException {
         UserResponse authenticate = dao.authenticate(email, hashPassword(password));
@@ -52,7 +55,7 @@ public class AuthManager {
         return result;
     }
 
-    public String hashPassword(String password)
+    String hashPassword(String password)
             throws NoSuchAlgorithmException, UnsupportedEncodingException {
         MessageDigest md = MessageDigest.getInstance("SHA-256");
         byte[] bytes = md.digest(password.getBytes(StandardCharsets.UTF_8));
@@ -122,7 +125,7 @@ public class AuthManager {
                 if(user !=null){
                     caseDao.makeCaseInvalidFrom(idUserStr);
                     caseDao.makeCaseInvalidTo(idUserStr);
-
+                    actionDao.makeActionInvalidFrom(idUserStr);
                     dao.deleteUser(idUserStr,user);
                     massage += "removing is successful";
                     result.setSuccess(true);

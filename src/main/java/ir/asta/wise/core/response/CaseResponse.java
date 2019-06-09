@@ -7,6 +7,7 @@ import ir.asta.wise.core.enums.Status;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 public class CaseResponse {
     private String id;
@@ -18,17 +19,38 @@ public class CaseResponse {
     private Importance importance;
     private Status status;
     private Boolean happy;
-
-
-
     @JsonProperty("created_date")
     private String createdDate;
     @JsonProperty("last_answer")
     private String lastUpdate;
+    private List<ActionResponse> actions;
+    @JsonProperty("answer_count")
+    private int answerCount;
 
 
 
     public CaseResponse() {
+    }
+
+    public Boolean getHappy() {
+        return happy;
+    }
+
+    public List<ActionResponse> getActions() {
+        return actions;
+    }
+
+    public void setActions(List<ActionResponse> actions) {
+        this.actions = actions;
+        setAnswerCount(actions.size());
+    }
+
+    public int getAnswerCount() {
+        return answerCount;
+    }
+
+    public void setAnswerCount(int answerCount) {
+        this.answerCount = answerCount;
     }
 
     public String getId() { return id; }

@@ -51,6 +51,14 @@ public class CaseEntity {
     @OneToMany(mappedBy = "caseEntity")
     private List<ActionEntity> actions;
 
+    public List<ActionEntity> getActions() {
+        return actions;
+    }
+
+    public void setActions(List<ActionEntity> actions) {
+        this.actions = actions;
+    }
+
     public CaseEntity() {
     }
 
