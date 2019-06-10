@@ -4,6 +4,7 @@ public class UserResponse {
     private String token;
     private String role;
     private String name;
+    private String email;
 
     public UserResponse() {
     }
@@ -30,5 +31,13 @@ public class UserResponse {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

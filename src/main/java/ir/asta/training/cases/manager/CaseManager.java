@@ -41,6 +41,9 @@ public class CaseManager {
     @Inject
     private FileManager fileManager;
 
+    @Inject
+    private NotificationManager notificationManager;
+
 
     @Transactional
     public ActionResult<String> setCase(
@@ -81,6 +84,16 @@ public class CaseManager {
                     result.setSuccess(true);
                     result.setMessage("با موفقیت ارسال شد");
                     result.setData(null);
+                    String email = authDao.authenticate(toEntity.getMongoId()).getEmail();
+                    String phone = authDao.getPhone(toEntity.getMongoId());
+                    new Thread(() -> {
+                        try {
+                            notificationManager.sendSMS("New case added in website! Please check it.", phone);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        notificationManager.sendEmail("مورد جدید", "برای شما مورد جدید ثبت شد! لطفا بررسی فرمایید", email);
+                    }).start();
                 } else {
                     result.setMessage("شما اجازه دسترسی به این مورد را ندارید");
                 }

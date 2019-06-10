@@ -28,6 +28,8 @@ public class ActionManager {
     private ActionDao actionDao;
     @Inject
     private FileManager fileManager;
+    @Inject
+    private NotificationManager notificationManager;
 
     @Transactional
     public ActionResult<Boolean> setAction(String token, long caseId, String content, int status, Attachment attachment, Long to) throws IOException {
@@ -36,7 +38,7 @@ public class ActionManager {
         ActionResult<Boolean> result = new ActionResult<>();
         if (authenticate != null && caseEntity != null && caseEntity.getStatus() != Status.CLOSE){
             UserEntity userEntity = authDao.getByToken(token);
-            UserEntity toEntity = userEntity;
+            UserEntity toEntity = caseEntity.to;
             if (to != null){
                 UserEntity byId = authDao.getById(to);
                 if (byId != null){
@@ -62,6 +64,22 @@ public class ActionManager {
                 caseEntity.setLastUpdate(date);
                 caseDao.update(caseEntity);
                 result.setSuccess(true);
+                if (caseEntity.from != null){
+                    String fromToken = caseEntity.from.getMongoId();
+                    UserResponse fromResponse = authDao.authenticate(fromToken);
+                    String phone = authDao.getPhone(fromToken);
+                    if (fromResponse != null){
+                        String email = fromResponse.getEmail();
+                        new Thread(() -> {
+                            notificationManager.sendEmail("تغییر در مورد ارسالی شما", "در مورد ارسالی شما تغییر ایجاد شد! لطفا بررسی فرمایید", email);
+                            try {
+                                notificationManager.sendSMS("There is an update in your case! Please check it.", phone);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }).start();
+                    }
+                }
             }
             else {
                 result.setMessage("وضعیت یافت نشد");

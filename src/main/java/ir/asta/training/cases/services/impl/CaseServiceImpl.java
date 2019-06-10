@@ -23,9 +23,6 @@ public class CaseServiceImpl implements CaseService {
     @Inject
     private CaseManager manager;
 
-    @Inject
-    private CaseDao dao;
-
     @Override
     public ActionResult<List<CaseResponse>> getMyCase(String token)
             throws UnsupportedEncodingException, NoSuchAlgorithmException{

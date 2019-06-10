@@ -153,7 +153,19 @@ public class AuthDao {
         }
         response.setName(name);
         response.setToken(next.getObjectId(UserMongo.objectId).toHexString());
+        response.setEmail(next.getString(UserMongo.email));
         return response;
+    }
+
+    public String getPhone(String token){
+        FindIterable<Document> users = database.getCollection("users").find(Filters.eq(
+                UserMongo.objectId, new ObjectId(token)
+        ));
+        if (users.iterator().hasNext()){
+            Document next = users.iterator().next();
+            return next.getString(UserMongo.phone);
+        }
+        return null;
     }
 
     public UserResponse registerUser(
