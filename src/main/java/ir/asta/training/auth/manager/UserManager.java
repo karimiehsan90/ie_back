@@ -30,6 +30,7 @@ public class UserManager {
 
     public ActionResult<UserResponse> edit(String name , String password , String email , String ppass , String phone , String token) throws UnsupportedEncodingException, NoSuchAlgorithmException {
         UserResponse userResponse = authDao.authenticate(token);
+        UserResponse emailcheck = authDao.getByEmail(email);
         ActionResult<UserResponse> result = new ActionResult<>();
         result.setData(userResponse);
         result.setSuccess(false);
@@ -43,8 +44,12 @@ public class UserManager {
                 result.setMessage("اسم خالی نباشد");
             }else if (email == null || !email.matches("^[a-z]([a-z0-9]|_[a-z0-9]|.[a-z0-9])+@[a-z0-9_]+([.][a-z0-9]+)+$")){
                 result.setMessage("ایمیل خالی یا نامعتبر است");
+            }else if (emailcheck != null && userResponse != emailcheck){
+                result.setMessage("ایمیل وارد شده در اختیار شخص دیگری است");
             }
-            else {
+            else if (!phone.matches("09[0-9]{9}")){
+                result.setMessage("موبایل نامعتبر است");
+            }else {
                 dao.updatePro(name,authManager.hashPassword(password),email,phone,token);
                 result.setMessage("تغییرات با موفقیت اعمال شد");
                 result.setSuccess(true);
