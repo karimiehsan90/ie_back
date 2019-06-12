@@ -19,13 +19,13 @@ public class CaseDao {
     private EntityManager manager;
 
     public List<CaseEntity> getMyCases(String token){
-        Query query = manager.createQuery("select e from CaseEntity e where e.from.mongoId=:mongo_id");
+        Query query = manager.createQuery("select e from CaseEntity e where e.from.mongoId=:mongo_id order by e.id desc");
         query.setParameter("mongo_id", token);
         return query.getResultList();
     }
 
     public List<CaseEntity> getCaseToMe(String token){
-        Query query = manager.createQuery("select e from CaseEntity e where e.to.mongoId=:mongo_id");
+        Query query = manager.createQuery("select e from CaseEntity e where e.to.mongoId=:mongo_id order by e.id desc");
         query.setParameter("mongo_id", token);
         return query.getResultList();
     }
@@ -78,6 +78,7 @@ public class CaseDao {
         }
         Predicate and = cb.and(predicates);
         cq.where(and);
+        cq.orderBy(cb.desc(caseEntity.get("id")));
         TypedQuery<CaseEntity> q = manager.createQuery(cq);
         return q.getResultList();
     }

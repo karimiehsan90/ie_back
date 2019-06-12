@@ -62,7 +62,7 @@ public class CaseManager {
         if (massages.length <= 0) {
             long toId = Long.valueOf(to);
             UserEntity toEntity = authDao.containsUserAndValid(toId);
-            if (toEntity != null) {
+            if (toEntity != null && !toEntity.getMongoId().equals(token)) {
                 Importance imp = null;
                 switch (importance) {
                     case "0":
@@ -97,7 +97,10 @@ public class CaseManager {
                 } else {
                     result.setMessage("شما اجازه دسترسی به این مورد را ندارید");
                 }
-            } else {
+            }else if (toEntity != null){
+                result.setMessage("شما نمیتوانید به خودتان مورد ارسال نمایید");
+            }
+            else {
                 result.setMessage("گیرنده نامعتبر است");
             }
 
