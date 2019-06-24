@@ -43,7 +43,7 @@ public class AuthManager {
 
     public ActionResult<UserResponse> login(String email, String password)
             throws UnsupportedEncodingException, NoSuchAlgorithmException {
-        UserResponse authenticate = dao.authenticate(email, hashPassword(password));
+        UserResponse authenticate = dao.authenticate(email != null ? email.toLowerCase() : "", hashPassword(password));
         ActionResult<UserResponse> result = new ActionResult<>();
         if (authenticate != null) {
             result.setSuccess(true);
@@ -57,6 +57,9 @@ public class AuthManager {
 
     String hashPassword(String password)
             throws NoSuchAlgorithmException, UnsupportedEncodingException {
+        if (password == null){
+            return "";
+        }
         MessageDigest md = MessageDigest.getInstance("SHA-256");
         byte[] bytes = md.digest(password.getBytes(StandardCharsets.UTF_8));
         return new String(bytes, "UTF-8");
@@ -77,7 +80,7 @@ public class AuthManager {
             result.setMessage(String.join("\n", validate));
         } else {
             if (!dao.containsUser(email)) {
-                UserResponse response = dao.registerUser(hashPassword(password), name, email, role);
+                UserResponse response = dao.registerUser(hashPassword(password), name, email.toLowerCase(), role);
                 result.setData(response);
                 result.setSuccess(true);
             } else {

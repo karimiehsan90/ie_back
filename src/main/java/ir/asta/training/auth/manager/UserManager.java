@@ -44,7 +44,7 @@ public class UserManager {
                 result.setMessage("اسم خالی نباشد");
             }else if (email == null || !email.matches("^[a-z]([a-z0-9]|_[a-z0-9]|.[a-z0-9])+@[a-z0-9_]+([.][a-z0-9]+)+$")){
                 result.setMessage("ایمیل خالی یا نامعتبر است");
-            }else if (emailcheck != null && userResponse != emailcheck){
+            }else if (emailcheck != null && !userResponse.getToken().equals(emailcheck.getToken())){
                 result.setMessage("ایمیل وارد شده در اختیار شخص دیگری است");
             }
             else if (!phone.matches("09[0-9]{9}")){
@@ -57,6 +57,7 @@ public class UserManager {
         }
         return result;
     }
+
 
     public ActionResult<ManageUserResponse> getUsers(String token) {
         ActionResult<ManageUserResponse> result = new ActionResult<>();
