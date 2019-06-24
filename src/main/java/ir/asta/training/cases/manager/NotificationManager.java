@@ -48,7 +48,7 @@ public class NotificationManager {
         ObjectWriter writer = mapper.writer();
         String json = writer.writeValueAsString(new SMSTokenRequest(conf.getSmsSecret(), conf.getSmsKey()));
         Map<String, String> headers = new HashMap<>();
-        headers.put("Content-Type", "application/json");
+        headers.put("Content-Type", "application/json;charset=utf-8");
         String post = sendRequest("POST", "/api/Token", json, headers);
         SMSTokenResponse smsTokenResponse = mapper.readValue(post, SMSTokenResponse.class);
         headers.put("x-sms-ir-secure-token", smsTokenResponse.getToken());
@@ -103,7 +103,7 @@ public class NotificationManager {
 
     public void sendEmail(String title, String body, String email) {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-
+        mailSender.setDefaultEncoding("UTF-8");
         mailSender.setHost("smtp.gmail.com");
         mailSender.setPort(587);
         mailSender.setUsername(conf.getEmail());

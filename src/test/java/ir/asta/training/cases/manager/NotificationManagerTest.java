@@ -51,6 +51,7 @@ public class NotificationManagerTest {
 
     @Test
     public void testEmail(){
-        manager.sendEmail(conf.getDefaultText(), "<h1>"+ conf.getDefaultText() + "</h1>", conf.getEmail());
+        String text = conf.getDefaultText();
+        manager.sendEmail(conf.getDefaultText(), "<h1>"+ text + "</h1>", conf.getEmail());
     }
 }
