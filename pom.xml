@@ -27,7 +27,7 @@
 		<spring.version>4.3.8.RELEASE</spring.version>
 		<junit.version>4.12</junit.version>
 		<logback.version>1.1.11</logback.version>
-		<hibernate-core.version>5.0.12.Final</hibernate-core.version>
+		<hibernate-core.version>5.4.24.Final</hibernate-core.version>
 		<hibernate-validator.version>5.3.5.Final</hibernate-validator.version>
 		<servlet.version>3.1.0</servlet.version>
 		<cxf.version>3.1.11</cxf.version>
